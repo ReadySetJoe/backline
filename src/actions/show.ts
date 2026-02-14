@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { generateMatchesForShow } from "@/lib/matching/generate";
 import { showSchema, type ShowInput } from "@/lib/validations/show";
 import { revalidatePath } from "next/cache";
 import type { ShowStatus } from "@prisma/client";
@@ -43,6 +44,9 @@ export async function createShow(input: ShowInput) {
         genres: { connect: genreIds.map((id) => ({ id })) },
       },
     });
+
+    // Generate matches for the newly created show (fire-and-forget)
+    generateMatchesForShow(show.id).catch(console.error);
 
     revalidatePath("/shows");
 

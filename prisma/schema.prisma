@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ARTIST
+  VENUE
+}
+
+enum ShowStatus {
+  OPEN
+  FULL
+  CANCELLED
+}
+
+enum MatchStatus {
+  SUGGESTED
+  LIKED_BY_ARTIST
+  LIKED_BY_VENUE
+  MUTUAL
+  PASSED
+}
+
+enum AgeRestriction {
+  ALL_AGES
+  EIGHTEEN_PLUS
+  TWENTY_ONE_PLUS
+}
+
+enum ArtistType {
+  SOLO
+  DUO
+  FULL_BAND
+}
+
+enum AvailabilityPreference {
+  WEEKENDS
+  WEEKNIGHTS
+  ANY_NIGHT
+  SPECIFIC_DATES
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  role          Role
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  artistProfile ArtistProfile?
+  venueProfile  VenueProfile?
+  messages      Message[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+// Auth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Genre {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  artistProfiles ArtistProfile[]
+  venueProfiles  VenueProfile[]
+  shows          Show[]
+}
+
+model ArtistProfile {
+  id                     String                 @id @default(cuid())
+  userId                 String                 @unique
+  name                   String
+  bio                    String?
+  profileImage           String?
+  bannerImage            String?
+  location               String
+  artistType             ArtistType
+  memberCount            Int                    @default(1)
+  spotifyUrl             String?
+  bandcampUrl            String?
+  instagramUrl           String?
+  websiteUrl             String?
+  sampleUrls             String[]               @default([])
+  availabilityPreference AvailabilityPreference @default(ANY_NIGHT)
+  typicalSetLength       Int?
+  drawEstimate           Int?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  genres  Genre[]
+  matches Match[]
+}
+
+model VenueProfile {
+  id             String         @id @default(cuid())
+  userId         String         @unique
+  name           String
+  bio            String?
+  profileImage   String?
+  bannerImage    String?
+  address        String
+  city           String
+  capacity       Int
+  hasPa          Boolean        @default(false)
+  hasBackline    Boolean        @default(false)
+  stageSize      String?
+  ageRestriction AgeRestriction @default(ALL_AGES)
+  websiteUrl     String?
+  instagramUrl   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  genres Genre[]
+  shows  Show[]
+}
+
+model Show {
+  id               String     @id @default(cuid())
+  venueId          String
+  date             DateTime
+  title            String?
+  note             String?
+  slotsTotal       Int        @default(3)
+  slotsFilled      Int        @default(0)
+  status           ShowStatus @default(OPEN)
+  compensationType String?
+  compensationNote String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  venue   VenueProfile @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  genres  Genre[]
+  matches Match[]
+}
+
+model Match {
+  id        String      @id @default(cuid())
+  artistId  String
+  showId    String
+  score     Float
+  status    MatchStatus @default(SUGGESTED)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  artist       ArtistProfile @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  show         Show          @relation(fields: [showId], references: [id], onDelete: Cascade)
+  conversation Conversation?
+
+  @@unique([artistId, showId])
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  matchId   String   @unique
+  createdAt DateTime @default(now())
+
+  match    Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  messages Message[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  body           String
+  read           Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}

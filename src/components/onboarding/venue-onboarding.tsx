@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -185,11 +186,13 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
 
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Input
+              <PlacesAutocomplete
                 id="address"
+                type="address"
                 placeholder="123 Main St"
                 value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                onValueChange={setAddress}
+                onPlaceSelect={(details) => setCity(details.city)}
                 required
               />
             </div>

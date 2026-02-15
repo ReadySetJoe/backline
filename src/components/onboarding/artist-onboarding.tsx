@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -252,11 +253,12 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
-              <Input
+              <PlacesAutocomplete
                 id="location"
+                type="(cities)"
                 placeholder="City, State"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onValueChange={setLocation}
                 required
               />
             </div>

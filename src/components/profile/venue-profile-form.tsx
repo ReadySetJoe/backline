@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -164,28 +165,28 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                placeholder="123 Main St"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <PlacesAutocomplete
+              id="address"
+              type="address"
+              placeholder="123 Main St"
+              value={address}
+              onValueChange={setAddress}
+              onPlaceSelect={(details) => setCity(details.city)}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
-              <Input
-                id="city"
-                placeholder="City name"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="city">City</Label>
+            <Input
+              id="city"
+              placeholder="City name"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
           </div>
         </div>
 

@@ -44,6 +44,10 @@ describe("locationScore", () => {
     expect(locationScore("columbus, oh", "Columbus, OH")).toBe(1.0);
   });
 
+  it("matches city name when one has state and other doesn't", () => {
+    expect(locationScore("Greenville, SC", "Greenville")).toBe(1.0);
+  });
+
   it("returns 0.0 for different cities", () => {
     expect(locationScore("Columbus, OH", "New York, NY")).toBe(0.0);
   });

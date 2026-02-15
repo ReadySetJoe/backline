@@ -32,16 +32,16 @@ export function genreScore(
 }
 
 /**
- * Location match — exact city match (case-insensitive).
+ * Location match — city name match (case-insensitive).
+ * Extracts city name before comma (e.g., "Columbus, OH" → "columbus").
  * Returns 1.0 for same city, 0.0 otherwise.
  */
 export function locationScore(
-  artistCity: string,
+  artistLocation: string,
   venueCity: string
 ): number {
-  return artistCity.toLowerCase().trim() === venueCity.toLowerCase().trim()
-    ? 1.0
-    : 0.0;
+  const normalize = (s: string) => s.split(",")[0].toLowerCase().trim();
+  return normalize(artistLocation) === normalize(venueCity) ? 1.0 : 0.0;
 }
 
 /**

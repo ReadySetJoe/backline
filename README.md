@@ -1,36 +1,142 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Backline
+
+A matchmaking platform that connects artists and venues to book live shows. Backline uses a scoring algorithm to suggest artist-venue pairings based on genre, location, capacity, availability, and compensation — then lets mutual matches message each other directly.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router) + React 19 + TypeScript
+- **Database:** PostgreSQL + Prisma ORM
+- **Auth:** NextAuth.js 5 (credentials provider, JWT sessions)
+- **Real-time:** Pusher (live messaging)
+- **UI:** Tailwind CSS 4 + shadcn/ui (Radix primitives)
+- **Location:** Google Maps Places Autocomplete
+- **Uploads:** UploadThing
+- **Testing:** Vitest (unit) + Playwright (E2E)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 22+
+- PostgreSQL running locally (or a remote connection string)
+
+### Setup
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy env template and fill in values (see Environment Variables below)
+cp .env.example .env
+
+# Generate Prisma client and run migrations
+npx prisma generate
+npx prisma migrate dev
+
+# Seed genres
+npx prisma db seed
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `NEXTAUTH_SECRET` | Session encryption key (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | App URL (e.g. `http://localhost:3000`) |
+| `PUSHER_APP_ID` | Pusher app ID (server-side) |
+| `PUSHER_KEY` | Pusher key (server-side) |
+| `PUSHER_SECRET` | Pusher secret (server-side) |
+| `PUSHER_CLUSTER` | Pusher cluster (e.g. `us2`) |
+| `NEXT_PUBLIC_PUSHER_KEY` | Pusher key (client-side) |
+| `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher cluster (client-side) |
+| `UPLOADTHING_SECRET` | UploadThing API secret |
+| `UPLOADTHING_APP_ID` | UploadThing app ID |
+| `CRON_SECRET` | Bearer token for `/api/matching/run` |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key (Places API enabled) |
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev          # Start dev server
+npm run build        # Production build
+npm run start        # Start production server
+npm run lint         # ESLint
+npm run test         # Vitest (unit tests)
+npm run test:watch   # Vitest in watch mode
+npm run test:e2e     # Playwright (E2E, requires dev server running)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── (auth)/             # Public routes: login, signup, onboarding
+│   ├── (dashboard)/        # Protected routes: dashboard, profile, matches, messages, shows
+│   └── api/                # API routes: auth handler, matching cron
+├── actions/                # Server actions (auth, profiles, shows, matches, messages)
+├── components/
+│   ├── ui/                 # shadcn/ui primitives (button, card, input, etc.)
+│   ├── layout/             # Header + sidebar
+│   ├── auth/               # Login/signup forms
+│   ├── onboarding/         # Artist/venue onboarding wizards
+│   ├── profile/            # Artist/venue profile edit forms
+│   ├── matches/            # Match discovery queue
+│   ├── messages/           # Conversation list + chat
+│   └── shows/              # Show cards + creation form
+├── lib/
+│   ├── auth/               # NextAuth config
+│   ├── db/                 # Prisma client singleton
+│   ├── matching/           # Scoring algorithm (score.ts, compute.ts, generate.ts)
+│   ├── pusher/             # Pusher client/server singletons
+│   ├── validations/        # Zod schemas
+│   └── google-maps.ts      # Google Maps loader
+├── hooks/                  # Custom React hooks
+└── types/                  # NextAuth type augmentation
+prisma/
+├── schema.prisma           # Database schema
+├── seed.ts                 # Genre seed data
+└── migrations/             # Migration history
+e2e/                        # Playwright E2E tests
+```
 
-## Deploy on Vercel
+## Matching Algorithm
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+When a venue creates a show, the matching engine scores every artist against it using five weighted factors:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Factor | Weight | How it works |
+|--------|--------|--------------|
+| **Genre** | 30% | Jaccard similarity between artist genres and show genres |
+| **Location** | 25% | Exact city match (case-insensitive, pre-comma extraction) |
+| **Capacity/Draw** | 20% | Sweet spot: artist draw is 60-90% of venue capacity |
+| **Availability** | 15% | Artist preference vs. show day-of-week |
+| **Compensation** | 10% | MVP: neutral 0.5 (artist preference not yet captured) |
+
+Matches scoring 10+ (out of 100) are created as `SUGGESTED`. The flow is:
+
+```
+SUGGESTED → LIKED_BY_ARTIST or LIKED_BY_VENUE → MUTUAL → conversation created
+                                               → PASSED (can reconsider)
+```
+
+Matching can also be triggered via `POST /api/matching/run` with a `Bearer` token (for cron jobs).
+
+## Database
+
+PostgreSQL with Prisma. Key models:
+
+- **User** — email/password auth, role (ARTIST or VENUE)
+- **ArtistProfile** — name, location, genres, draw, availability, links
+- **VenueProfile** — name, address, city, capacity, genres, gear, links
+- **Genre** — normalized lookup table (34 genres, many-to-many)
+- **Show** — venue's event with date, slots, genres, compensation
+- **Match** — artist-show pair with score and status
+- **Conversation / Message** — chat between mutual matches
+
+Run `npx prisma studio` to browse the database locally.

@@ -1011,7 +1011,7 @@ const venues: VenueSeed[] = [
         daysOut: 7,
         slotsTotal: 5,
         genres: ["Singer-Songwriter", "Folk"],
-        compensationType: "tips" as CompensationType,
+        compensationType: "other" as CompensationType,
         compensationNote: "Tip jar — keep what you earn",
       },
       {

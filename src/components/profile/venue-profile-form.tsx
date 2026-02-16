@@ -6,12 +6,7 @@ import { Input } from "@/components/ui/input";
 import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -59,7 +54,9 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
   const [address, setAddress] = useState(profile.address);
   const [city, setCity] = useState(profile.city);
   const [capacity, setCapacity] = useState(String(profile.capacity));
-  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(profile.genreIds);
+  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(
+    profile.genreIds,
+  );
   const [hasPa, setHasPa] = useState(profile.hasPa);
   const [hasBackline, setHasBackline] = useState(profile.hasBackline);
   const [stageSize, setStageSize] = useState(profile.stageSize);
@@ -105,7 +102,7 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
         setError(
           typeof result.error === "string"
             ? result.error
-            : "Please check your inputs and try again."
+            : "Please check your inputs and try again.",
         );
       }
     });

@@ -41,13 +41,16 @@ export interface ShowMatchData {
  */
 export function computeMatchScore(
   artist: ArtistMatchData,
-  show: ShowMatchData
+  show: ShowMatchData,
 ): number {
   return totalScore({
     genre: genreScore(artist.genres, show.genres),
     location: locationScore(artist.location, show.venueCity),
     capacityDraw: capacityDrawScore(artist.drawEstimate, show.venueCapacity),
-    availability: availabilityScore(artist.availabilityPreference, show.showDate),
+    availability: availabilityScore(
+      artist.availabilityPreference,
+      show.showDate,
+    ),
     compensation: compensationScore(show.compensationType),
   });
 }

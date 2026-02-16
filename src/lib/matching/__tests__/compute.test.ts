@@ -17,7 +17,7 @@ describe("computeMatchScore", () => {
         venueCapacity: 80,
         showDate: new Date("2026-03-14"),
         compensationType: "door_split",
-      }
+      },
     );
     // Expected: genre=1.0, location=1.0, capacity=1.0, avail=1.0, comp=0.5
     // Total = (30 + 25 + 20 + 15 + 5) = 95
@@ -38,7 +38,7 @@ describe("computeMatchScore", () => {
         venueCapacity: 50,
         showDate: new Date("2026-03-11"), // Wednesday in UTC
         compensationType: "guarantee",
-      }
+      },
     );
     // Expected: genre=0, location=0, capacity=0, avail=0, comp=0.5
     // Total = 5
@@ -59,7 +59,7 @@ describe("computeMatchScore", () => {
         venueCapacity: 200,
         showDate: new Date("2026-03-14"), // Saturday in UTC
         compensationType: "door_split",
-      }
+      },
     );
     // Expected: genre≈0.25, location=1.0, capacity=0.0, avail=1.0, comp=0.5
     // Total ≈ (7.5 + 25 + 0 + 15 + 5) = 52.5 → 53

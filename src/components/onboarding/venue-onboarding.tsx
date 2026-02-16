@@ -6,12 +6,7 @@ import { Input } from "@/components/ui/input";
 import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -122,7 +117,7 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
         setError(
           typeof result.error === "string"
             ? result.error
-            : "Please check your inputs and try again."
+            : "Please check your inputs and try again.",
         );
       }
     });
@@ -155,9 +150,7 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
               </span>
               {i < STEPS.length - 1 && (
                 <div
-                  className={`h-px w-6 ${
-                    i < step ? "bg-primary" : "bg-muted"
-                  }`}
+                  className={`h-px w-6 ${i < step ? "bg-primary" : "bg-muted"}`}
                 />
               )}
             </div>
@@ -251,7 +244,7 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
               <Label htmlFor="stageSize">Stage Size (optional)</Label>
               <Input
                 id="stageSize"
-                placeholder='e.g. 12x8 ft'
+                placeholder="e.g. 12x8 ft"
                 value={stageSize}
                 onChange={(e) => setStageSize(e.target.value)}
               />
@@ -340,11 +333,7 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
           </Button>
 
           {step < STEPS.length - 1 ? (
-            <Button
-              type="button"
-              onClick={handleNext}
-              disabled={!canProceed()}
-            >
+            <Button type="button" onClick={handleNext} disabled={!canProceed()}>
               Next
             </Button>
           ) : (

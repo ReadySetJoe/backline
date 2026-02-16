@@ -95,7 +95,7 @@ export function Chat({
               (m) =>
                 m.id.startsWith("optimistic-") &&
                 m.senderId === currentUserId &&
-                m.body === data.body
+                m.body === data.body,
             );
             if (optimisticIndex !== -1) {
               const updated = [...prev];
@@ -163,9 +163,7 @@ export function Chat({
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <div className="min-w-0">
-            <h2 className="font-semibold text-sm truncate">
-              {otherPartyName}
-            </h2>
+            <h2 className="font-semibold text-sm truncate">{otherPartyName}</h2>
             <p className="text-xs text-muted-foreground truncate">
               {showTitle || "Match conversation"} — {artistName} / {venueName}
             </p>
@@ -221,7 +219,9 @@ export function Chat({
                       </p>
                       <p
                         className={`text-[10px] mt-1 ${
-                          isOwn ? "text-primary-foreground/60" : "text-muted-foreground"
+                          isOwn
+                            ? "text-primary-foreground/60"
+                            : "text-muted-foreground"
                         }`}
                       >
                         {formatMessageTime(msg.createdAt)}

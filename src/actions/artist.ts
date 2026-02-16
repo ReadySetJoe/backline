@@ -11,7 +11,8 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export async function createArtistProfile(input: ArtistProfileInput) {
   const session = await auth();
-  if (!session?.user) return { success: false as const, error: "Not authenticated" };
+  if (!session?.user)
+    return { success: false as const, error: "Not authenticated" };
 
   const parsed = artistProfileSchema.safeParse(input);
   if (!parsed.success) {

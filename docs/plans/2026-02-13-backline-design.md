@@ -18,10 +18,12 @@ The core unit is the **show**, not the venue. A "venue" can be a club, a basemen
 ## Data Model
 
 ### User
+
 - email, password hash, role (`artist` | `venue`)
 - Base account — one profile per role
 
 ### ArtistProfile
+
 - name, bio, profile image, banner image
 - genres (many-to-many, max 5 to prevent gaming)
 - location (city/region)
@@ -33,6 +35,7 @@ The core unit is the **show**, not the venue. A "venue" can be a club, a basemen
 - draw estimate (typical audience they bring)
 
 ### VenueProfile
+
 - name, bio, profile image, banner image
 - location (address, city/region)
 - capacity
@@ -43,6 +46,7 @@ The core unit is the **show**, not the venue. A "venue" can be a club, a basemen
 - links (website, social)
 
 ### Show (elevated from VenueDate)
+
 - venue_id, date
 - title (optional — e.g., "Friday Night Punk Showcase")
 - genre_tags (what fits this specific bill)
@@ -52,31 +56,35 @@ The core unit is the **show**, not the venue. A "venue" can be a club, a basemen
 - compensation details (per-show — may differ from venue defaults)
 
 ### Match
+
 - artist_id, show_id (matches are per-show, not per-venue)
 - score (0-100, computed by matching algorithm)
 - status: `suggested` → `liked_by_artist` | `liked_by_venue` → `mutual` → `passed`
 - `passed` is a filter state, not a deletion — fully reversible from a "Passed" tab
 
 ### Conversation
+
 - Linked to a mutual match
 - participants (artist user, venue user)
 
 ### Message
+
 - conversation_id, sender_id, body, timestamp, read status
 
 ## Matching Algorithm
 
 Weighted scoring (0-100) based on profile and show-level data:
 
-| Factor | Weight | Logic |
-|--------|--------|-------|
-| Genre overlap | 30% | Jaccard similarity between artist genres and show genre tags (falls back to venue genres if show has none) |
-| Location proximity | 25% | Distance between artist and venue. Mostly pass/fail for single-city MVP |
-| Capacity/draw fit | 20% | Artist draw vs. venue capacity. Sweet spot: 60-90% of capacity |
-| Availability overlap | 15% | Do artist's availability preferences intersect with show date? |
-| Compensation compatibility | 10% | Does the show's pay model match artist expectations? |
+| Factor                     | Weight | Logic                                                                                                      |
+| -------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
+| Genre overlap              | 30%    | Jaccard similarity between artist genres and show genre tags (falls back to venue genres if show has none) |
+| Location proximity         | 25%    | Distance between artist and venue. Mostly pass/fail for single-city MVP                                    |
+| Capacity/draw fit          | 20%    | Artist draw vs. venue capacity. Sweet spot: 60-90% of capacity                                             |
+| Availability overlap       | 15%    | Do artist's availability preferences intersect with show date?                                             |
+| Compensation compatibility | 10%    | Does the show's pay model match artist expectations?                                                       |
 
 ### How it works
+
 - Matching runs as a background job (cron or triggered on profile/show updates)
 - Each artist sees a ranked list of shows looking for them
 - Each venue sees a ranked list of artists for each of their open shows
@@ -85,12 +93,14 @@ Weighted scoring (0-100) based on profile and show-level data:
 - Matching recomputes nightly or on profile/show update
 
 ### MVP simplifications
+
 - Weights are hardcoded (not user-configurable)
 - No ML — pure rule-based scoring
 - Genre tags capped at 5 per artist to prevent gaming
 - Single city simplifies location scoring
 
 ### Post-MVP enhancements
+
 - Venue-adjustable algorithm weights (a dive bar cares about vibe, a concert hall cares about draw)
 - Learn from successful bookings to refine weights
 - "Boost" feature for visibility
@@ -99,6 +109,7 @@ Weighted scoring (0-100) based on profile and show-level data:
 ## Core User Flows
 
 ### Onboarding
+
 1. Sign up (email/password)
 2. Choose role: "I'm an artist" or "I'm a venue/organizer"
 3. Guided step-by-step profile builder (not one giant form)
@@ -107,6 +118,7 @@ Weighted scoring (0-100) based on profile and show-level data:
 6. Profile goes live → matching begins
 
 ### Creating a Show (venue side)
+
 1. From dashboard, "Create a Show"
 2. Pick a date, set slots, add genre tags for this specific bill
 3. Add a note describing what they're looking for
@@ -114,6 +126,7 @@ Weighted scoring (0-100) based on profile and show-level data:
 5. Save → matching runs → suggested artists appear
 
 ### Matching / Discovery
+
 1. **Artists** see: specific shows looking for their genre, ranked by match score
 2. **Venues** see: ranked artists for each open show
 3. Match card: name, photo, top genre tags, match score, key stats
@@ -122,12 +135,14 @@ Weighted scoring (0-100) based on profile and show-level data:
 6. Mutual like → notification → conversation unlocks
 
 ### Messaging
+
 1. Conversation list shows all mutual matches with active threads
 2. Simple text messaging (no file attachments in MVP)
 3. Unread indicators + email notifications
 4. Messages tied to the match — context always visible
 
 ### Profile Management
+
 1. Edit profile anytime
 2. Venues manage shows (create, edit, mark full/cancelled)
 3. Profile/show updates trigger match re-scoring
@@ -167,17 +182,20 @@ backline/
 ## Testing & Error Handling
 
 ### Testing strategy
+
 - **Unit tests** (Vitest): matching algorithm, utilities, data transformations
 - **Integration tests**: server actions, DB queries via Prisma against test DB
 - **E2E tests** (Playwright): signup → profile → browse matches → like → mutual → message
 
 ### Error handling
+
 - Server actions return typed `{ success, data, error }` responses
 - Form validation: Zod schemas shared between client and server
 - Optimistic UI for messaging
 - Graceful fallbacks for slow matching (show cached results)
 
 ### MVP testing priority
+
 1. Matching algorithm (core — must be correct)
 2. Auth flows (can't break signup/login)
 3. Messaging delivery (messages must arrive)

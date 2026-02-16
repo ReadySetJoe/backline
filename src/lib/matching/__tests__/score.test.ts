@@ -20,9 +20,10 @@ describe("genreScore", () => {
 
   it("returns correct Jaccard similarity for partial overlap", () => {
     // intersection = 1 (punk), union = 3 (punk, rock, hardcore) → 1/3 ≈ 0.333
-    expect(
-      genreScore(["punk", "rock"], ["punk", "hardcore"])
-    ).toBeCloseTo(0.333, 2);
+    expect(genreScore(["punk", "rock"], ["punk", "hardcore"])).toBeCloseTo(
+      0.333,
+      2,
+    );
   });
 
   it("returns 0.0 for empty sets", () => {
@@ -112,7 +113,7 @@ describe("availabilityScore", () => {
 
   it("returns 0.5 for SPECIFIC_DATES (neutral)", () => {
     expect(availabilityScore("SPECIFIC_DATES", new Date("2026-03-14"))).toBe(
-      0.5
+      0.5,
     );
   });
 });

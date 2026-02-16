@@ -28,7 +28,7 @@ const config = {
 
         const passwordMatch = await bcrypt.compare(
           credentials.password as string,
-          user.passwordHash
+          user.passwordHash,
         );
 
         if (!passwordMatch) return null;

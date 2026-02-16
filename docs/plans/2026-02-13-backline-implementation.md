@@ -15,6 +15,7 @@
 ## Task 1: Project Scaffolding
 
 **Files:**
+
 - Create: `package.json` (via create-next-app)
 - Create: `vitest.config.ts`
 - Create: `playwright.config.ts`
@@ -25,6 +26,7 @@
 **Step 1: Scaffold Next.js project**
 
 Run from `backline/` directory:
+
 ```bash
 npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm
 ```
@@ -47,6 +49,7 @@ npx shadcn@latest init
 Select: New York style, Zinc base color, CSS variables = yes.
 
 Add initial components:
+
 ```bash
 npx shadcn@latest add button input label card form select badge textarea dialog tabs separator avatar
 ```
@@ -54,6 +57,7 @@ npx shadcn@latest add button input label card form select badge textarea dialog 
 **Step 4: Configure Vitest**
 
 Create `vitest.config.ts`:
+
 ```typescript
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
@@ -75,6 +79,7 @@ export default defineConfig({
 ```
 
 Create `src/test/setup.ts`:
+
 ```typescript
 import "@testing-library/jest-dom/vitest";
 ```
@@ -82,6 +87,7 @@ import "@testing-library/jest-dom/vitest";
 **Step 5: Configure Playwright**
 
 Create `playwright.config.ts`:
+
 ```typescript
 import { defineConfig, devices } from "@playwright/test";
 
@@ -98,9 +104,7 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
   },
-  projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-  ],
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
 });
 ```
 
@@ -123,6 +127,7 @@ UPLOADTHING_APP_ID=""
 **Step 7: Add scripts to package.json**
 
 Add to `"scripts"`:
+
 ```json
 "test": "vitest run",
 "test:watch": "vitest",
@@ -152,6 +157,7 @@ Vitest, Playwright, and core dependencies."
 ## Task 2: Database Schema
 
 **Files:**
+
 - Create: `prisma/schema.prisma`
 - Create: `src/lib/db/index.ts`
 
@@ -164,6 +170,7 @@ npx prisma init
 **Step 2: Write the schema**
 
 Replace `prisma/schema.prisma` with:
+
 ```prisma
 generator client {
   provider = "prisma-client-js"
@@ -383,6 +390,7 @@ model Message {
 **Step 3: Create Prisma client singleton**
 
 Create `src/lib/db/index.ts`:
+
 ```typescript
 import { PrismaClient } from "@prisma/client";
 
@@ -432,6 +440,7 @@ Conversation, Message, and Genre models with enums."
 ## Task 3: Auth Setup
 
 **Files:**
+
 - Create: `src/lib/auth/index.ts`
 - Create: `src/app/api/auth/[...nextauth]/route.ts`
 - Create: `src/lib/auth/credentials.ts`
@@ -440,6 +449,7 @@ Conversation, Message, and Genre models with enums."
 **Step 1: Write the auth type extensions**
 
 Create `src/types/auth.ts`:
+
 ```typescript
 import { Role } from "@prisma/client";
 
@@ -468,6 +478,7 @@ declare module "next-auth/jwt" {
 **Step 2: Write the auth config**
 
 Create `src/lib/auth/index.ts`:
+
 ```typescript
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -498,7 +509,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const passwordMatch = await bcrypt.compare(
           credentials.password as string,
-          user.passwordHash
+          user.passwordHash,
         );
 
         if (!passwordMatch) return null;
@@ -525,6 +536,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 Install bcryptjs:
+
 ```bash
 npm install bcryptjs
 npm install -D @types/bcryptjs
@@ -533,6 +545,7 @@ npm install -D @types/bcryptjs
 **Step 3: Create the route handler**
 
 Create `src/app/api/auth/[...nextauth]/route.ts`:
+
 ```typescript
 import { handlers } from "@/lib/auth";
 
@@ -553,6 +566,7 @@ JWT strategy, role in session, bcrypt password hashing."
 ## Task 4: Zod Schemas & Shared Types
 
 **Files:**
+
 - Create: `src/lib/validations/auth.ts`
 - Create: `src/lib/validations/artist.ts`
 - Create: `src/lib/validations/venue.ts`
@@ -564,6 +578,7 @@ JWT strategy, role in session, bcrypt password hashing."
 **Step 1: Write failing tests for auth schemas**
 
 Create `src/lib/validations/__tests__/auth.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { signUpSchema, loginSchema } from "../auth";
@@ -615,6 +630,7 @@ Expected: FAIL — module not found
 **Step 3: Implement auth schemas**
 
 Create `src/lib/validations/auth.ts`:
+
 ```typescript
 import { z } from "zod";
 
@@ -641,6 +657,7 @@ Expected: PASS
 **Step 5: Write artist validation tests**
 
 Create `src/lib/validations/__tests__/artist.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { artistProfileSchema } from "../artist";
@@ -689,6 +706,7 @@ Expected: FAIL
 **Step 7: Implement all validation schemas**
 
 Create `src/lib/validations/artist.ts`:
+
 ```typescript
 import { z } from "zod";
 
@@ -718,6 +736,7 @@ export type ArtistProfileInput = z.infer<typeof artistProfileSchema>;
 ```
 
 Create `src/lib/validations/venue.ts`:
+
 ```typescript
 import { z } from "zod";
 
@@ -742,11 +761,14 @@ export type VenueProfileInput = z.infer<typeof venueProfileSchema>;
 ```
 
 Create `src/lib/validations/show.ts`:
+
 ```typescript
 import { z } from "zod";
 
 export const showSchema = z.object({
-  date: z.coerce.date().refine((d) => d > new Date(), "Date must be in the future"),
+  date: z.coerce
+    .date()
+    .refine((d) => d > new Date(), "Date must be in the future"),
   title: z.string().max(100).optional(),
   note: z.string().max(500).optional(),
   slotsTotal: z.number().int().min(1).max(20).default(3),
@@ -759,6 +781,7 @@ export type ShowInput = z.infer<typeof showSchema>;
 ```
 
 Create `src/lib/validations/message.ts`:
+
 ```typescript
 import { z } from "zod";
 
@@ -790,6 +813,7 @@ schemas with shared types. Genre cap at 5 per artist."
 ## Task 5: Auth UI (Signup + Login)
 
 **Files:**
+
 - Create: `src/actions/auth.ts`
 - Create: `src/app/(auth)/signup/page.tsx`
 - Create: `src/app/(auth)/login/page.tsx`
@@ -800,6 +824,7 @@ schemas with shared types. Genre cap at 5 per artist."
 **Step 1: Write the signup server action**
 
 Create `src/actions/auth.ts`:
+
 ```typescript
 "use server";
 
@@ -845,6 +870,7 @@ export async function signUp(input: SignUpInput) {
 **Step 2: Build the signup form component**
 
 Create `src/components/auth/signup-form.tsx`:
+
 ```tsx
 "use client";
 
@@ -880,7 +906,7 @@ export function SignUpForm() {
       setError(
         typeof result.error === "string"
           ? result.error
-          : Object.values(result.error).flat().join(", ")
+          : Object.values(result.error).flat().join(", "),
       );
       setLoading(false);
     }
@@ -920,7 +946,13 @@ export function SignUpForm() {
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" required minLength={8} />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              minLength={8}
+            />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -938,6 +970,7 @@ export function SignUpForm() {
 **Step 3: Build the login form component**
 
 Create `src/components/auth/login-form.tsx`:
+
 ```tsx
 "use client";
 
@@ -1002,8 +1035,13 @@ export function LoginForm() {
 **Step 4: Create the auth pages**
 
 Create `src/app/(auth)/layout.tsx`:
+
 ```tsx
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       {children}
@@ -1013,6 +1051,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 ```
 
 Create `src/app/(auth)/signup/page.tsx`:
+
 ```tsx
 import { SignUpForm } from "@/components/auth/signup-form";
 import Link from "next/link";
@@ -1022,7 +1061,10 @@ export default function SignUpPage() {
     <div className="space-y-4">
       <SignUpForm />
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account? <Link href="/login" className="underline">Log in</Link>
+        Already have an account?{" "}
+        <Link href="/login" className="underline">
+          Log in
+        </Link>
       </p>
     </div>
   );
@@ -1030,6 +1072,7 @@ export default function SignUpPage() {
 ```
 
 Create `src/app/(auth)/login/page.tsx`:
+
 ```tsx
 import { LoginForm } from "@/components/auth/login-form";
 import Link from "next/link";
@@ -1039,7 +1082,10 @@ export default function LoginPage() {
     <div className="space-y-4">
       <LoginForm />
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account? <Link href="/signup" className="underline">Sign up</Link>
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className="underline">
+          Sign up
+        </Link>
       </p>
     </div>
   );
@@ -1067,6 +1113,7 @@ server action with validation and bcrypt hashing."
 ## Task 6: Onboarding Flow (Profile Creation)
 
 **Files:**
+
 - Create: `src/app/(auth)/onboarding/page.tsx`
 - Create: `src/components/onboarding/artist-onboarding.tsx`
 - Create: `src/components/onboarding/venue-onboarding.tsx`
@@ -1076,12 +1123,16 @@ server action with validation and bcrypt hashing."
 **Step 1: Write server action for creating artist profile**
 
 Create `src/actions/artist.ts`:
+
 ```typescript
 "use server";
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { artistProfileSchema, type ArtistProfileInput } from "@/lib/validations/artist";
+import {
+  artistProfileSchema,
+  type ArtistProfileInput,
+} from "@/lib/validations/artist";
 import { redirect } from "next/navigation";
 
 export async function createArtistProfile(input: ArtistProfileInput) {
@@ -1110,12 +1161,16 @@ export async function createArtistProfile(input: ArtistProfileInput) {
 **Step 2: Write server action for creating venue profile**
 
 Create `src/actions/venue.ts`:
+
 ```typescript
 "use server";
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { venueProfileSchema, type VenueProfileInput } from "@/lib/validations/venue";
+import {
+  venueProfileSchema,
+  type VenueProfileInput,
+} from "@/lib/validations/venue";
 import { redirect } from "next/navigation";
 
 export async function createVenueProfile(input: VenueProfileInput) {
@@ -1144,6 +1199,7 @@ export async function createVenueProfile(input: VenueProfileInput) {
 **Step 3: Build artist onboarding multi-step form**
 
 Create `src/components/onboarding/artist-onboarding.tsx` — a multi-step form with steps:
+
 1. Name, artist type, member count
 2. Genre selection (checkboxes, max 5)
 3. Location, draw estimate, set length, availability
@@ -1156,6 +1212,7 @@ Genres should be fetched from the database and passed as props. Use shadcn `Butt
 **Step 4: Build venue onboarding multi-step form**
 
 Create `src/components/onboarding/venue-onboarding.tsx` — multi-step form:
+
 1. Name, address, city
 2. Capacity, stage specs (PA, backline, stage size), age restriction
 3. Genre selection (checkboxes)
@@ -1166,6 +1223,7 @@ Same pattern as artist onboarding.
 **Step 5: Create onboarding page that routes by role**
 
 Create `src/app/(auth)/onboarding/page.tsx`:
+
 ```tsx
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -1180,8 +1238,12 @@ export default async function OnboardingPage() {
   // If already onboarded, go to dashboard
   const hasProfile =
     session.user.role === "ARTIST"
-      ? await db.artistProfile.findUnique({ where: { userId: session.user.id } })
-      : await db.venueProfile.findUnique({ where: { userId: session.user.id } });
+      ? await db.artistProfile.findUnique({
+          where: { userId: session.user.id },
+        })
+      : await db.venueProfile.findUnique({
+          where: { userId: session.user.id },
+        });
 
   if (hasProfile) redirect("/dashboard");
 
@@ -1198,18 +1260,47 @@ export default async function OnboardingPage() {
 **Step 6: Seed genres**
 
 Create `prisma/seed.ts`:
+
 ```typescript
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const genres = [
-  "Rock", "Punk", "Hardcore", "Metal", "Indie Rock", "Indie Pop",
-  "Emo", "Post-Punk", "Shoegaze", "Noise", "Garage Rock", "Psychedelic",
-  "Folk", "Country", "Americana", "Bluegrass", "Singer-Songwriter",
-  "Jazz", "Blues", "Soul", "R&B", "Funk",
-  "Hip Hop", "Rap", "Electronic", "DJ", "Ambient", "Experimental",
-  "Pop", "Pop Punk", "Ska", "Reggae", "Latin", "World",
+  "Rock",
+  "Punk",
+  "Hardcore",
+  "Metal",
+  "Indie Rock",
+  "Indie Pop",
+  "Emo",
+  "Post-Punk",
+  "Shoegaze",
+  "Noise",
+  "Garage Rock",
+  "Psychedelic",
+  "Folk",
+  "Country",
+  "Americana",
+  "Bluegrass",
+  "Singer-Songwriter",
+  "Jazz",
+  "Blues",
+  "Soul",
+  "R&B",
+  "Funk",
+  "Hip Hop",
+  "Rap",
+  "Electronic",
+  "DJ",
+  "Ambient",
+  "Experimental",
+  "Pop",
+  "Pop Punk",
+  "Ska",
+  "Reggae",
+  "Latin",
+  "World",
 ];
 
 async function main() {
@@ -1236,6 +1327,7 @@ main()
 ```
 
 Add to `package.json`:
+
 ```json
 "prisma": {
   "seed": "npx tsx prisma/seed.ts"
@@ -1248,6 +1340,7 @@ Expected: "Seeded 34 genres"
 **Step 7: Verify onboarding works end-to-end**
 
 Run: `npm run dev`
+
 1. Sign up as artist → lands on onboarding
 2. Complete all steps → redirects to /dashboard (404 is fine for now)
 
@@ -1266,6 +1359,7 @@ server actions with validation. Seed 34 music genres."
 ## Task 7: Dashboard Layout & Profile Management
 
 **Files:**
+
 - Create: `src/app/(dashboard)/layout.tsx`
 - Create: `src/app/(dashboard)/dashboard/page.tsx`
 - Create: `src/app/(dashboard)/profile/page.tsx`
@@ -1278,6 +1372,7 @@ server actions with validation. Seed 34 music genres."
 **Step 1: Build the dashboard layout**
 
 Create `src/app/(dashboard)/layout.tsx` with:
+
 - A sidebar navigation: Dashboard, Matches, Messages, Shows (venue only), Profile
 - A header with user info and logout button
 - Responsive — sidebar collapses on mobile
@@ -1288,6 +1383,7 @@ Check for profile existence and redirect to `/onboarding` if not onboarded.
 **Step 2: Create the dashboard page (placeholder)**
 
 Create `src/app/(dashboard)/dashboard/page.tsx`:
+
 ```tsx
 import { auth } from "@/lib/auth";
 
@@ -1310,6 +1406,7 @@ export default async function DashboardPage() {
 **Step 3: Create profile edit page**
 
 Create `src/app/(dashboard)/profile/page.tsx` that:
+
 - Loads current profile from DB
 - Renders artist or venue edit form (reuse onboarding form components with pre-filled data)
 - Server action `updateArtistProfile` / `updateVenueProfile` in `src/actions/profile.ts`
@@ -1317,6 +1414,7 @@ Create `src/app/(dashboard)/profile/page.tsx` that:
 **Step 4: Verify navigation works**
 
 Run: `npm run dev`
+
 1. Log in → dashboard loads
 2. Navigate to profile → edit form pre-filled
 3. Edit and save → changes persist
@@ -1336,6 +1434,7 @@ both artists and venues with server actions."
 ## Task 8: Show Management (Venue Side)
 
 **Files:**
+
 - Create: `src/app/(dashboard)/shows/page.tsx`
 - Create: `src/app/(dashboard)/shows/new/page.tsx`
 - Create: `src/app/(dashboard)/shows/[id]/page.tsx`
@@ -1347,6 +1446,7 @@ both artists and venues with server actions."
 **Step 1: Write the show server actions**
 
 Create `src/actions/show.ts`:
+
 ```typescript
 "use server";
 
@@ -1388,7 +1488,10 @@ export async function createShow(input: ShowInput) {
   return { success: true, data: show };
 }
 
-export async function updateShowStatus(showId: string, status: "OPEN" | "FULL" | "CANCELLED") {
+export async function updateShowStatus(
+  showId: string,
+  status: "OPEN" | "FULL" | "CANCELLED",
+) {
   const session = await auth();
   if (!session?.user || session.user.role !== "VENUE") {
     return { success: false, error: "Not authorized" };
@@ -1416,6 +1519,7 @@ export async function updateShowStatus(showId: string, status: "OPEN" | "FULL" |
 **Step 2: Build the show creation form**
 
 Create `src/components/shows/show-form.tsx`:
+
 - Date picker, title (optional), genre tag selection, slots count, compensation type + note
 - Validates with `showSchema` on submit
 - Calls `createShow` server action
@@ -1423,6 +1527,7 @@ Create `src/components/shows/show-form.tsx`:
 **Step 3: Build the shows list page**
 
 Create `src/app/(dashboard)/shows/page.tsx`:
+
 - Fetch all shows for current venue, ordered by date
 - Display as cards with date, title, genre tags, slots remaining, status
 - "Create a Show" button links to `/shows/new`
@@ -1431,6 +1536,7 @@ Create `src/app/(dashboard)/shows/page.tsx`:
 **Step 4: Build show detail page**
 
 Create `src/app/(dashboard)/shows/[id]/page.tsx`:
+
 - Show full details
 - Status management (mark as full, cancel)
 - Later: will show matched artists here
@@ -1438,6 +1544,7 @@ Create `src/app/(dashboard)/shows/[id]/page.tsx`:
 **Step 5: Verify show CRUD**
 
 Run: `npm run dev`
+
 1. Log in as venue → navigate to Shows
 2. Create a show → appears in list
 3. View show detail → status controls work
@@ -1457,6 +1564,7 @@ List view, detail view, status management (open/full/cancelled)."
 ## Task 9: Matching Algorithm (Core)
 
 **Files:**
+
 - Create: `src/lib/matching/score.ts`
 - Create: `src/lib/matching/compute.ts`
 - Test: `src/lib/matching/__tests__/score.test.ts`
@@ -1467,6 +1575,7 @@ This is the most important task — TDD thoroughly.
 **Step 1: Write failing tests for individual scoring functions**
 
 Create `src/lib/matching/__tests__/score.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import {
@@ -1489,7 +1598,10 @@ describe("genreScore", () => {
 
   it("returns 0.5 for 50% Jaccard overlap", () => {
     // intersection = 1 (punk), union = 3 (punk, rock, hardcore) → 1/3 ≈ 0.333
-    expect(genreScore(["punk", "rock"], ["punk", "hardcore"])).toBeCloseTo(0.333, 2);
+    expect(genreScore(["punk", "rock"], ["punk", "hardcore"])).toBeCloseTo(
+      0.333,
+      2,
+    );
   });
 
   it("returns 0.0 for empty sets", () => {
@@ -1537,8 +1649,8 @@ describe("totalScore", () => {
 
   it("computes partial score correctly", () => {
     const score = totalScore({
-      genre: 1.0,       // 30
-      location: 0.0,    // 0
+      genre: 1.0, // 30
+      location: 0.0, // 0
       capacityDraw: 0.5, // 10
       availability: 1.0, // 15
       compensation: 0.0, // 0
@@ -1556,6 +1668,7 @@ Expected: FAIL — module not found
 **Step 3: Implement scoring functions**
 
 Create `src/lib/matching/score.ts`:
+
 ```typescript
 const WEIGHTS = {
   genre: 0.3,
@@ -1569,7 +1682,10 @@ const WEIGHTS = {
  * Jaccard similarity between two genre slug arrays.
  * Returns 0.0 - 1.0
  */
-export function genreScore(artistGenres: string[], showGenres: string[]): number {
+export function genreScore(
+  artistGenres: string[],
+  showGenres: string[],
+): number {
   if (artistGenres.length === 0 || showGenres.length === 0) return 0;
 
   const setA = new Set(artistGenres);
@@ -1598,7 +1714,7 @@ export function locationScore(artistCity: string, venueCity: string): number {
  */
 export function capacityDrawScore(
   draw: number | null | undefined,
-  capacity: number | null | undefined
+  capacity: number | null | undefined,
 ): number {
   if (!draw || !capacity) return 0;
 
@@ -1616,10 +1732,7 @@ export function capacityDrawScore(
  * Availability match.
  * Returns 1.0 if artist is available for the show's day of week, 0.0 otherwise.
  */
-export function availabilityScore(
-  preference: string,
-  showDate: Date
-): number {
+export function availabilityScore(preference: string, showDate: Date): number {
   if (preference === "ANY_NIGHT") return 1.0;
 
   const day = showDate.getDay(); // 0=Sun, 6=Sat
@@ -1639,7 +1752,7 @@ export function availabilityScore(
  */
 export function compensationScore(
   showCompensationType: string | null,
-  _artistPreference?: string | null
+  _artistPreference?: string | null,
 ): number {
   // MVP: artist doesn't have a comp preference field yet, return neutral
   if (!showCompensationType) return 0.5;
@@ -1662,7 +1775,7 @@ export function totalScore(scores: {
       scores.capacityDraw * WEIGHTS.capacityDraw +
       scores.availability * WEIGHTS.availability +
       scores.compensation * WEIGHTS.compensation) *
-      100
+      100,
   );
 }
 ```
@@ -1675,6 +1788,7 @@ Expected: All PASS
 **Step 5: Write failing tests for the compute function**
 
 Create `src/lib/matching/__tests__/compute.test.ts`:
+
 ```typescript
 import { describe, it, expect } from "vitest";
 import { computeMatchScore } from "../compute";
@@ -1694,7 +1808,7 @@ describe("computeMatchScore", () => {
         venueCapacity: 80,
         showDate: new Date("2026-03-14"), // Saturday
         compensationType: "door_split",
-      }
+      },
     );
     expect(score).toBeGreaterThan(80);
   });
@@ -1713,7 +1827,7 @@ describe("computeMatchScore", () => {
         venueCapacity: 50,
         showDate: new Date("2026-03-11"), // Wednesday
         compensationType: "guarantee",
-      }
+      },
     );
     expect(score).toBeLessThan(20);
   });
@@ -1728,6 +1842,7 @@ Expected: FAIL
 **Step 7: Implement compute function**
 
 Create `src/lib/matching/compute.ts`:
+
 ```typescript
 import {
   genreScore,
@@ -1755,13 +1870,16 @@ interface ShowMatchData {
 
 export function computeMatchScore(
   artist: ArtistMatchData,
-  show: ShowMatchData
+  show: ShowMatchData,
 ): number {
   return totalScore({
     genre: genreScore(artist.genres, show.genres),
     location: locationScore(artist.location, show.venueCity),
     capacityDraw: capacityDrawScore(artist.drawEstimate, show.venueCapacity),
-    availability: availabilityScore(artist.availabilityPreference, show.showDate),
+    availability: availabilityScore(
+      artist.availabilityPreference,
+      show.showDate,
+    ),
     compensation: compensationScore(show.compensationType),
   });
 }
@@ -1787,12 +1905,14 @@ availability, compensation. Thoroughly tested."
 ## Task 10: Match Generation Job
 
 **Files:**
+
 - Create: `src/lib/matching/generate.ts`
 - Create: `src/app/api/matching/run/route.ts`
 
 **Step 1: Write the match generation function**
 
 Create `src/lib/matching/generate.ts`:
+
 ```typescript
 import { db } from "@/lib/db";
 import { computeMatchScore } from "./compute";
@@ -1832,7 +1952,7 @@ export async function generateMatchesForShow(showId: string) {
         venueCapacity: show.venue.capacity,
         showDate: show.date,
         compensationType: show.compensationType,
-      }
+      },
     );
 
     // Only create matches above a minimum threshold
@@ -1876,6 +1996,7 @@ export async function generateAllMatches() {
 **Step 2: Create the API route for triggering matching**
 
 Create `src/app/api/matching/run/route.ts`:
+
 ```typescript
 import { NextResponse } from "next/server";
 import { generateAllMatches } from "@/lib/matching/generate";
@@ -1913,6 +2034,7 @@ creation and via API endpoint for cron. Min score threshold 10."
 ## Task 11: Match Discovery UI
 
 **Files:**
+
 - Create: `src/app/(dashboard)/matches/page.tsx`
 - Create: `src/components/matches/match-card.tsx`
 - Create: `src/components/matches/match-queue.tsx`
@@ -1922,6 +2044,7 @@ creation and via API endpoint for cron. Min score threshold 10."
 **Step 1: Write match interaction server actions**
 
 Create `src/actions/match.ts`:
+
 ```typescript
 "use server";
 
@@ -2011,6 +2134,7 @@ export async function reconsiderMatch(matchId: string) {
 **Step 2: Build match card component**
 
 Create `src/components/matches/match-card.tsx`:
+
 - For artists: shows venue name, show title, date, genre tags, match score, key venue stats
 - For venues: shows artist name, genre tags, match score, draw estimate, sample links
 - Like button, Pass button
@@ -2019,6 +2143,7 @@ Create `src/components/matches/match-card.tsx`:
 **Step 3: Build match queue with tabs**
 
 Create `src/components/matches/match-queue.tsx`:
+
 - Two tabs: "Suggested" and "Passed"
 - Suggested tab: active matches sorted by score descending
 - Passed tab: dismissed matches with "Reconsider" button
@@ -2027,6 +2152,7 @@ Create `src/components/matches/match-queue.tsx`:
 **Step 4: Build the matches page**
 
 Create `src/app/(dashboard)/matches/page.tsx`:
+
 ```tsx
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -2097,6 +2223,7 @@ like/pass actions, reversible dismissals, mutual match creates conversation."
 ## Task 12: Messaging
 
 **Files:**
+
 - Create: `src/app/(dashboard)/messages/page.tsx`
 - Create: `src/app/(dashboard)/messages/[id]/page.tsx`
 - Create: `src/components/messages/conversation-list.tsx`
@@ -2109,6 +2236,7 @@ like/pass actions, reversible dismissals, mutual match creates conversation."
 **Step 1: Set up Pusher client and server**
 
 Create `src/lib/pusher/server.ts`:
+
 ```typescript
 import Pusher from "pusher";
 
@@ -2122,18 +2250,20 @@ export const pusherServer = new Pusher({
 ```
 
 Create `src/lib/pusher/client.ts`:
+
 ```typescript
 import PusherClient from "pusher-js";
 
 export const pusherClient = new PusherClient(
   process.env.NEXT_PUBLIC_PUSHER_KEY!,
-  { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER! }
+  { cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER! },
 );
 ```
 
 **Step 2: Write the send message server action**
 
 Create `src/actions/message.ts`:
+
 ```typescript
 "use server";
 
@@ -2142,7 +2272,10 @@ import { db } from "@/lib/db";
 import { messageSchema } from "@/lib/validations/message";
 import { pusherServer } from "@/lib/pusher/server";
 
-export async function sendMessage(input: { conversationId: string; body: string }) {
+export async function sendMessage(input: {
+  conversationId: string;
+  body: string;
+}) {
   const session = await auth();
   if (!session?.user) return { success: false, error: "Not authenticated" };
 
@@ -2185,7 +2318,7 @@ export async function sendMessage(input: { conversationId: string; body: string 
   await pusherServer.trigger(
     `conversation-${parsed.data.conversationId}`,
     "new-message",
-    message
+    message,
   );
 
   return { success: true, data: message };
@@ -2211,6 +2344,7 @@ export async function markMessagesRead(conversationId: string) {
 **Step 3: Build conversation list**
 
 Create `src/components/messages/conversation-list.tsx`:
+
 - List all conversations the user is part of
 - Show: other party's name, last message preview, unread count, match context (show name)
 - Click → navigate to `/messages/[id]`
@@ -2218,6 +2352,7 @@ Create `src/components/messages/conversation-list.tsx`:
 **Step 4: Build chat component**
 
 Create `src/components/messages/chat.tsx`:
+
 - Display messages in chronological order
 - Real-time updates via Pusher subscription to `conversation-{id}` channel
 - Auto-scroll to latest message
@@ -2225,6 +2360,7 @@ Create `src/components/messages/chat.tsx`:
 - Show match context at top (artist ↔ show/venue info)
 
 Create `src/components/messages/message-input.tsx`:
+
 - Text input + send button
 - Optimistic UI: show message immediately, reconcile on server response
 - Disable while sending
@@ -2232,10 +2368,12 @@ Create `src/components/messages/message-input.tsx`:
 **Step 5: Build message pages**
 
 Create `src/app/(dashboard)/messages/page.tsx`:
+
 - Fetch conversations for current user
 - Render `ConversationList`
 
 Create `src/app/(dashboard)/messages/[id]/page.tsx`:
+
 - Fetch conversation + messages
 - Render `Chat` component
 
@@ -2262,6 +2400,7 @@ counts, optimistic UI, message read tracking."
 ## Task 13: Landing Page & Polish
 
 **Files:**
+
 - Modify: `src/app/page.tsx`
 - Modify: `src/app/layout.tsx`
 - Create: `src/components/landing/hero.tsx`
@@ -2269,6 +2408,7 @@ counts, optimistic UI, message read tracking."
 **Step 1: Build the landing page**
 
 Update `src/app/page.tsx`:
+
 - Hero section: "Find your next show" / tagline
 - Two CTAs: "I'm an Artist" → /signup, "I'm a Venue" → /signup
 - Brief feature highlights (matching, messaging, show management)
@@ -2277,6 +2417,7 @@ Update `src/app/page.tsx`:
 **Step 2: Update root layout**
 
 Update `src/app/layout.tsx`:
+
 - Set page title: "Backline — Connect Artists & Venues"
 - Add meta description
 - Set up font (Inter or similar)
@@ -2300,6 +2441,7 @@ Hero section with CTAs, feature highlights, metadata."
 ## Task 14: E2E Tests (Critical Paths)
 
 **Files:**
+
 - Create: `e2e/auth.spec.ts`
 - Create: `e2e/onboarding.spec.ts`
 - Create: `e2e/matching.spec.ts`
@@ -2309,6 +2451,7 @@ Hero section with CTAs, feature highlights, metadata."
 **Step 1: Write auth E2E tests**
 
 Create `e2e/auth.spec.ts`:
+
 ```typescript
 import { test, expect } from "@playwright/test";
 
@@ -2362,19 +2505,19 @@ Playwright tests covering critical user paths."
 
 ## Summary
 
-| Task | What it delivers |
-|------|-----------------|
-| 1 | Project scaffolding, tooling, dependencies |
-| 2 | Complete database schema with all models |
-| 3 | Auth (signup, login, JWT sessions) |
-| 4 | Zod validation schemas (tested) |
-| 5 | Auth UI (signup + login pages) |
-| 6 | Onboarding (profile creation, genre seeding) |
-| 7 | Dashboard layout, navigation, profile editing |
-| 8 | Show creation and management (venue side) |
-| 9 | Matching algorithm (thoroughly tested) |
-| 10 | Match generation job (per-show + cron) |
-| 11 | Match discovery UI (like/pass/reconsider) |
-| 12 | Real-time messaging (Pusher) |
-| 13 | Landing page |
-| 14 | E2E tests |
+| Task | What it delivers                              |
+| ---- | --------------------------------------------- |
+| 1    | Project scaffolding, tooling, dependencies    |
+| 2    | Complete database schema with all models      |
+| 3    | Auth (signup, login, JWT sessions)            |
+| 4    | Zod validation schemas (tested)               |
+| 5    | Auth UI (signup + login pages)                |
+| 6    | Onboarding (profile creation, genre seeding)  |
+| 7    | Dashboard layout, navigation, profile editing |
+| 8    | Show creation and management (venue side)     |
+| 9    | Matching algorithm (thoroughly tested)        |
+| 10   | Match generation job (per-show + cron)        |
+| 11   | Match discovery UI (like/pass/reconsider)     |
+| 12   | Real-time messaging (Pusher)                  |
+| 13   | Landing page                                  |
+| 14   | E2E tests                                     |

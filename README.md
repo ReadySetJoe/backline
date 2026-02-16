@@ -44,21 +44,21 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `NEXTAUTH_SECRET` | Session encryption key (`openssl rand -base64 32`) |
-| `NEXTAUTH_URL` | App URL (e.g. `http://localhost:3000`) |
-| `PUSHER_APP_ID` | Pusher app ID (server-side) |
-| `PUSHER_KEY` | Pusher key (server-side) |
-| `PUSHER_SECRET` | Pusher secret (server-side) |
-| `PUSHER_CLUSTER` | Pusher cluster (e.g. `us2`) |
-| `NEXT_PUBLIC_PUSHER_KEY` | Pusher key (client-side) |
-| `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher cluster (client-side) |
-| `UPLOADTHING_SECRET` | UploadThing API secret |
-| `UPLOADTHING_APP_ID` | UploadThing app ID |
-| `CRON_SECRET` | Bearer token for `/api/matching/run` |
-| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key (Places API enabled) |
+| Variable                          | Description                                        |
+| --------------------------------- | -------------------------------------------------- |
+| `DATABASE_URL`                    | PostgreSQL connection string                       |
+| `NEXTAUTH_SECRET`                 | Session encryption key (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL`                    | App URL (e.g. `http://localhost:3000`)             |
+| `PUSHER_APP_ID`                   | Pusher app ID (server-side)                        |
+| `PUSHER_KEY`                      | Pusher key (server-side)                           |
+| `PUSHER_SECRET`                   | Pusher secret (server-side)                        |
+| `PUSHER_CLUSTER`                  | Pusher cluster (e.g. `us2`)                        |
+| `NEXT_PUBLIC_PUSHER_KEY`          | Pusher key (client-side)                           |
+| `NEXT_PUBLIC_PUSHER_CLUSTER`      | Pusher cluster (client-side)                       |
+| `UPLOADTHING_SECRET`              | UploadThing API secret                             |
+| `UPLOADTHING_APP_ID`              | UploadThing app ID                                 |
+| `CRON_SECRET`                     | Bearer token for `/api/matching/run`               |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps API key (Places API enabled)           |
 
 ## Scripts
 
@@ -110,13 +110,13 @@ e2e/                        # Playwright E2E tests
 
 When a venue creates a show, the matching engine scores every artist against it using five weighted factors:
 
-| Factor | Weight | How it works |
-|--------|--------|--------------|
-| **Genre** | 30% | Jaccard similarity between artist genres and show genres |
-| **Location** | 25% | Exact city match (case-insensitive, pre-comma extraction) |
-| **Capacity/Draw** | 20% | Sweet spot: artist draw is 60-90% of venue capacity |
-| **Availability** | 15% | Artist preference vs. show day-of-week |
-| **Compensation** | 10% | MVP: neutral 0.5 (artist preference not yet captured) |
+| Factor            | Weight | How it works                                              |
+| ----------------- | ------ | --------------------------------------------------------- |
+| **Genre**         | 30%    | Jaccard similarity between artist genres and show genres  |
+| **Location**      | 25%    | Exact city match (case-insensitive, pre-comma extraction) |
+| **Capacity/Draw** | 20%    | Sweet spot: artist draw is 60-90% of venue capacity       |
+| **Availability**  | 15%    | Artist preference vs. show day-of-week                    |
+| **Compensation**  | 10%    | MVP: neutral 0.5 (artist preference not yet captured)     |
 
 Matches scoring 10+ (out of 100) are created as `SUGGESTED`. The flow is:
 

@@ -24,8 +24,7 @@ const features = [
   {
     icon: MessageCircle,
     title: "Direct Messaging",
-    description:
-      "Chat directly with your matches to work out the details.",
+    description: "Chat directly with your matches to work out the details.",
   },
 ] as const;
 

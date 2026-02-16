@@ -7,12 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -85,7 +80,7 @@ export function ShowForm({ genres }: ShowFormProps) {
         setError(
           typeof result.error === "string"
             ? result.error
-            : "Please check your inputs and try again."
+            : "Please check your inputs and try again.",
         );
       }
     });
@@ -189,7 +184,9 @@ export function ShowForm({ genres }: ShowFormProps) {
 
           {/* Compensation type */}
           <div className="space-y-2">
-            <Label htmlFor="compensationType">Compensation Type (optional)</Label>
+            <Label htmlFor="compensationType">
+              Compensation Type (optional)
+            </Label>
             <Select
               value={compensationType}
               onValueChange={setCompensationType}

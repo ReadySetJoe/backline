@@ -44,10 +44,7 @@ export default async function DashboardLayout({
 
       {/* Main content area — offset for desktop sidebar */}
       <div className="md:pl-64">
-        <Header
-          userEmail={session.user.email}
-          profileName={profileName}
-        />
+        <Header userEmail={session.user.email} profileName={profileName} />
         <main className="p-4 md:p-6 pb-20 md:pb-6">{children}</main>
       </div>
     </div>

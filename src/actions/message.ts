@@ -68,19 +68,15 @@ export async function sendMessage(input: {
   // Broadcast via Pusher (best-effort, don't fail the action if Pusher is down)
   try {
     const pusher = getPusherServer();
-    await pusher.trigger(
-      `conversation-${conversationId}`,
-      "new-message",
-      {
-        id: message.id,
-        conversationId: message.conversationId,
-        senderId: message.senderId,
-        senderEmail: message.sender.email,
-        body: message.body,
-        read: message.read,
-        createdAt: message.createdAt.toISOString(),
-      }
-    );
+    await pusher.trigger(`conversation-${conversationId}`, "new-message", {
+      id: message.id,
+      conversationId: message.conversationId,
+      senderId: message.senderId,
+      senderEmail: message.sender.email,
+      body: message.body,
+      read: message.read,
+      createdAt: message.createdAt.toISOString(),
+    });
   } catch {
     // Pusher broadcast failed — message is still saved in DB
     console.error("Failed to broadcast message via Pusher");

@@ -6,12 +6,7 @@ import { Input } from "@/components/ui/input";
 import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -51,7 +46,8 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
   const [location, setLocation] = useState("");
   const [drawEstimate, setDrawEstimate] = useState<string>("");
   const [typicalSetLength, setTypicalSetLength] = useState<string>("");
-  const [availabilityPreference, setAvailabilityPreference] = useState<string>("ANY_NIGHT");
+  const [availabilityPreference, setAvailabilityPreference] =
+    useState<string>("ANY_NIGHT");
 
   // Step 4: Links
   const [spotifyUrl, setSpotifyUrl] = useState("");
@@ -72,7 +68,11 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
   function canProceed(): boolean {
     switch (step) {
       case 0:
-        return name.trim().length > 0 && artistType !== "" && parseInt(memberCount) >= 1;
+        return (
+          name.trim().length > 0 &&
+          artistType !== "" &&
+          parseInt(memberCount) >= 1
+        );
       case 1:
         return selectedGenreIds.length >= 1;
       case 2:
@@ -107,7 +107,9 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
         genreIds: selectedGenreIds,
         location: location.trim(),
         drawEstimate: drawEstimate ? parseInt(drawEstimate) : undefined,
-        typicalSetLength: typicalSetLength ? parseInt(typicalSetLength) : undefined,
+        typicalSetLength: typicalSetLength
+          ? parseInt(typicalSetLength)
+          : undefined,
         availabilityPreference: availabilityPreference as
           | "WEEKENDS"
           | "WEEKNIGHTS"
@@ -123,7 +125,7 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
         setError(
           typeof result.error === "string"
             ? result.error
-            : "Please check your inputs and try again."
+            : "Please check your inputs and try again.",
         );
       }
     });
@@ -156,9 +158,7 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
               </span>
               {i < STEPS.length - 1 && (
                 <div
-                  className={`h-px w-6 ${
-                    i < step ? "bg-primary" : "bg-muted"
-                  }`}
+                  className={`h-px w-6 ${i < step ? "bg-primary" : "bg-muted"}`}
                 />
               )}
             </div>
@@ -218,7 +218,13 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label>Select Your Genres</Label>
-              <Badge variant={selectedGenreIds.length >= MAX_GENRES ? "destructive" : "secondary"}>
+              <Badge
+                variant={
+                  selectedGenreIds.length >= MAX_GENRES
+                    ? "destructive"
+                    : "secondary"
+                }
+              >
                 {selectedGenreIds.length}/{MAX_GENRES} selected
               </Badge>
             </div>
@@ -237,8 +243,8 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
                       isSelected
                         ? "border-primary bg-primary text-primary-foreground"
                         : isDisabled
-                        ? "border-muted bg-muted text-muted-foreground cursor-not-allowed opacity-50"
-                        : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
+                          ? "border-muted bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                          : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
                     }`}
                   >
                     {genre.name}
@@ -371,11 +377,7 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
           </Button>
 
           {step < STEPS.length - 1 ? (
-            <Button
-              type="button"
-              onClick={handleNext}
-              disabled={!canProceed()}
-            >
+            <Button type="button" onClick={handleNext} disabled={!canProceed()}>
               Next
             </Button>
           ) : (

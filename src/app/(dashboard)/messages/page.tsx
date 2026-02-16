@@ -19,10 +19,7 @@ export default async function MessagesPage() {
   const conversations = await db.conversation.findMany({
     where: {
       match: {
-        OR: [
-          { artist: { userId } },
-          { show: { venue: { userId } } },
-        ],
+        OR: [{ artist: { userId } }, { show: { venue: { userId } } }],
       },
     },
     include: {
@@ -78,7 +75,7 @@ export default async function MessagesPage() {
         lastMessageAt: lastMessage?.createdAt?.toISOString() ?? null,
         unreadCount,
       } satisfies ConversationSummary;
-    })
+    }),
   );
 
   // Order by most recent message (conversations with messages first, then by creation)

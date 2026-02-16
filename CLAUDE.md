@@ -35,6 +35,7 @@ npx prisma db seed   # Seed genres
 ### Singletons
 
 External service clients use lazy singletons (initialize once, reuse):
+
 - `src/lib/db/index.ts` — Prisma client
 - `src/lib/pusher/server.ts` — `getPusherServer()`
 - `src/lib/pusher/client.ts` — `getPusherClient()`
@@ -43,6 +44,7 @@ External service clients use lazy singletons (initialize once, reuse):
 ### Server Actions
 
 All actions follow this pattern:
+
 1. Parse input with Zod schema
 2. Check auth with `auth()`
 3. Verify ownership/permissions
@@ -75,6 +77,7 @@ e2e/                → Playwright tests
 ## Database
 
 PostgreSQL + Prisma. The schema uses enums for roles, statuses, and types. Key relationships:
+
 - User 1:1 ArtistProfile or VenueProfile
 - VenueProfile 1:N Show
 - Show N:M Genre

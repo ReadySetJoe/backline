@@ -36,7 +36,7 @@ export async function generateMatchesForShow(showId: string) {
         venueCapacity: show.venue.capacity,
         showDate: show.date,
         compensationType: show.compensationType,
-      }
+      },
     );
 
     // Only create matches above a minimum threshold

@@ -6,12 +6,7 @@ import { Input } from "@/components/ui/input";
 import { PlacesAutocomplete } from "@/components/ui/places-autocomplete";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -61,16 +56,20 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
   const [bio, setBio] = useState(profile.bio);
   const [artistType, setArtistType] = useState(profile.artistType);
   const [memberCount, setMemberCount] = useState(String(profile.memberCount));
-  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(profile.genreIds);
+  const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(
+    profile.genreIds,
+  );
   const [location, setLocation] = useState(profile.location);
   const [drawEstimate, setDrawEstimate] = useState(
-    profile.drawEstimate !== undefined ? String(profile.drawEstimate) : ""
+    profile.drawEstimate !== undefined ? String(profile.drawEstimate) : "",
   );
   const [typicalSetLength, setTypicalSetLength] = useState(
-    profile.typicalSetLength !== undefined ? String(profile.typicalSetLength) : ""
+    profile.typicalSetLength !== undefined
+      ? String(profile.typicalSetLength)
+      : "",
   );
   const [availabilityPreference, setAvailabilityPreference] = useState(
-    profile.availabilityPreference
+    profile.availabilityPreference,
   );
   const [spotifyUrl, setSpotifyUrl] = useState(profile.spotifyUrl);
   const [bandcampUrl, setBandcampUrl] = useState(profile.bandcampUrl);
@@ -100,7 +99,9 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
         genreIds: selectedGenreIds,
         location: location.trim(),
         drawEstimate: drawEstimate ? parseInt(drawEstimate) : undefined,
-        typicalSetLength: typicalSetLength ? parseInt(typicalSetLength) : undefined,
+        typicalSetLength: typicalSetLength
+          ? parseInt(typicalSetLength)
+          : undefined,
         availabilityPreference: availabilityPreference as
           | "WEEKENDS"
           | "WEEKNIGHTS"
@@ -118,7 +119,7 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
         setError(
           typeof result.error === "string"
             ? result.error
-            : "Please check your inputs and try again."
+            : "Please check your inputs and try again.",
         );
       }
     });
@@ -215,7 +216,13 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
               Genres
             </h3>
-            <Badge variant={selectedGenreIds.length >= MAX_GENRES ? "destructive" : "secondary"}>
+            <Badge
+              variant={
+                selectedGenreIds.length >= MAX_GENRES
+                  ? "destructive"
+                  : "secondary"
+              }
+            >
               {selectedGenreIds.length}/{MAX_GENRES} selected
             </Badge>
           </div>
@@ -234,8 +241,8 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
                     isSelected
                       ? "border-primary bg-primary text-primary-foreground"
                       : isDisabled
-                      ? "border-muted bg-muted text-muted-foreground cursor-not-allowed opacity-50"
-                      : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
+                        ? "border-muted bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                        : "border-border bg-background hover:bg-accent hover:text-accent-foreground"
                   }`}
                 >
                   {genre.name}
@@ -293,7 +300,9 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="availabilityPreference">Availability Preference</Label>
+            <Label htmlFor="availabilityPreference">
+              Availability Preference
+            </Label>
             <Select
               value={availabilityPreference}
               onValueChange={setAvailabilityPreference}

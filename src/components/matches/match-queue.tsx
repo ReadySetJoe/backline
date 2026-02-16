@@ -1,12 +1,7 @@
 "use client";
 
 import type { MatchStatus, ArtistType } from "@prisma/client";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MatchCard } from "@/components/matches/match-card";
 
 export interface MatchData {
@@ -41,7 +36,7 @@ const ACTIVE_STATUSES: MatchStatus[] = [
 
 export function MatchQueue({ matches, role }: MatchQueueProps) {
   const suggestedMatches = matches.filter((m) =>
-    ACTIVE_STATUSES.includes(m.status)
+    ACTIVE_STATUSES.includes(m.status),
   );
   const passedMatches = matches.filter((m) => m.status === "PASSED");
 
@@ -49,7 +44,8 @@ export function MatchQueue({ matches, role }: MatchQueueProps) {
     <Tabs defaultValue="suggested" className="w-full">
       <TabsList>
         <TabsTrigger value="suggested">
-          Suggested{suggestedMatches.length > 0 && ` (${suggestedMatches.length})`}
+          Suggested
+          {suggestedMatches.length > 0 && ` (${suggestedMatches.length})`}
         </TabsTrigger>
         <TabsTrigger value="passed">
           Passed{passedMatches.length > 0 && ` (${passedMatches.length})`}
@@ -92,9 +88,7 @@ export function MatchQueue({ matches, role }: MatchQueueProps) {
       <TabsContent value="passed" className="mt-4">
         {passedMatches.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              No passed matches.
-            </p>
+            <p className="text-muted-foreground text-lg">No passed matches.</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

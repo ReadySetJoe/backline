@@ -1,10 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -59,8 +56,8 @@ export function ConversationList({ conversations }: ConversationListProps) {
           No conversations yet
         </h2>
         <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-          Like some matches to start chatting! When both sides are interested,
-          a conversation will open automatically.
+          Like some matches to start chatting! When both sides are interested, a
+          conversation will open automatically.
         </p>
       </div>
     );
@@ -73,7 +70,9 @@ export function ConversationList({ conversations }: ConversationListProps) {
           <Card className="transition-shadow hover:shadow-md cursor-pointer">
             <CardContent className="flex items-center gap-3 py-3 px-4">
               <Avatar>
-                <AvatarFallback>{getInitials(convo.otherPartyName)}</AvatarFallback>
+                <AvatarFallback>
+                  {getInitials(convo.otherPartyName)}
+                </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
@@ -100,7 +99,10 @@ export function ConversationList({ conversations }: ConversationListProps) {
               </div>
 
               {convo.unreadCount > 0 && (
-                <Badge variant="default" className="rounded-full text-xs px-2 py-0.5">
+                <Badge
+                  variant="default"
+                  className="rounded-full text-xs px-2 py-0.5"
+                >
                   {convo.unreadCount}
                 </Badge>
               )}

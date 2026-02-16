@@ -19,7 +19,7 @@ const WEIGHTS = {
  */
 export function genreScore(
   artistGenres: string[],
-  showGenres: string[]
+  showGenres: string[],
 ): number {
   if (artistGenres.length === 0 || showGenres.length === 0) return 0;
 
@@ -38,7 +38,7 @@ export function genreScore(
  */
 export function locationScore(
   artistLocation: string,
-  venueCity: string
+  venueCity: string,
 ): number {
   const normalize = (s: string) => s.split(",")[0].toLowerCase().trim();
   return normalize(artistLocation) === normalize(venueCity) ? 1.0 : 0.0;
@@ -52,7 +52,7 @@ export function locationScore(
  */
 export function capacityDrawScore(
   draw: number | null | undefined,
-  capacity: number | null | undefined
+  capacity: number | null | undefined,
 ): number {
   if (!draw || !capacity) return 0;
 
@@ -79,10 +79,7 @@ export function capacityDrawScore(
  * WEEKNIGHTS: 1.0 for Mon–Thu, 0.0 otherwise
  * SPECIFIC_DATES: 0.5 (neutral — requires separate date check)
  */
-export function availabilityScore(
-  preference: string,
-  showDate: Date
-): number {
+export function availabilityScore(preference: string, showDate: Date): number {
   if (preference === "ANY_NIGHT") return 1.0;
 
   const day = showDate.getUTCDay();
@@ -101,7 +98,7 @@ export function availabilityScore(
  */
 export function compensationScore(
   showCompensationType: string | null,
-  _artistPreference?: string | null
+  _artistPreference?: string | null,
 ): number {
   return 0.5; // MVP: neutral
 }
@@ -130,6 +127,6 @@ export function totalScore(scores: {
       scores.capacityDraw * WEIGHTS.capacityDraw +
       scores.availability * WEIGHTS.availability +
       scores.compensation * WEIGHTS.compensation) *
-      100
+      100,
   );
 }

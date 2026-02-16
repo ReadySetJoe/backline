@@ -1,11 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ShowStatus } from "@prisma/client";
 
 interface ShowCardProps {
@@ -18,11 +13,23 @@ interface ShowCardProps {
   status: ShowStatus;
 }
 
-const STATUS_STYLES: Record<ShowStatus, { label: string; className: string }> = {
-  OPEN: { label: "Open", className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
-  FULL: { label: "Full", className: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
-  CANCELLED: { label: "Cancelled", className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
-};
+const STATUS_STYLES: Record<ShowStatus, { label: string; className: string }> =
+  {
+    OPEN: {
+      label: "Open",
+      className:
+        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    },
+    FULL: {
+      label: "Full",
+      className:
+        "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+    },
+    CANCELLED: {
+      label: "Cancelled",
+      className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+    },
+  };
 
 function formatShowDate(date: Date): string {
   return new Intl.DateTimeFormat("en-US", {

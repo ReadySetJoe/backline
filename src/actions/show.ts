@@ -59,10 +59,7 @@ export async function createShow(input: ShowInput) {
   }
 }
 
-export async function updateShowStatus(
-  showId: string,
-  status: ShowStatus
-) {
+export async function updateShowStatus(showId: string, status: ShowStatus) {
   const session = await auth();
   if (!session?.user) {
     return { success: false as const, error: "Not authenticated" };

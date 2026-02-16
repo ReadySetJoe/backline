@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Backline — Connect Artists & Venues",
-  description: "A matchmaking platform for artists and venues to book live shows.",
+  description:
+    "A matchmaking platform for artists and venues to book live shows.",
 };
 
 export default function RootLayout({

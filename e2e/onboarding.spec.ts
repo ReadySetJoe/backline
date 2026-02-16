@@ -22,7 +22,7 @@ test.describe("Onboarding", () => {
     // Step 2: Genres — select at least one genre
     // Genre buttons are rendered from the database; click the first available one
     const genreButtons = page.locator(
-      "button.rounded-md.border.text-sm.font-medium"
+      "button.rounded-md.border.text-sm.font-medium",
     );
     await genreButtons.first().click();
 
@@ -77,7 +77,7 @@ test.describe("Onboarding", () => {
 
     // Select a genre
     const genreButtons = page.locator(
-      "button.rounded-md.border.text-sm.font-medium"
+      "button.rounded-md.border.text-sm.font-medium",
     );
     await genreButtons.first().click();
 
@@ -105,7 +105,7 @@ test.describe("Onboarding", () => {
     // Go back to Step 1 and verify name is preserved
     await backButton.click();
     await expect(page.getByLabel(/artist \/ band name/i)).toHaveValue(
-      "Back Nav Band"
+      "Back Nav Band",
     );
   });
 
@@ -132,7 +132,7 @@ test.describe("Onboarding", () => {
 
     // Step 3: Genres — select at least one genre
     const genreButtons = page.locator(
-      "button.rounded-md.border.text-sm.font-medium"
+      "button.rounded-md.border.text-sm.font-medium",
     );
     await genreButtons.first().click();
 

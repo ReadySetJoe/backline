@@ -8,7 +8,7 @@ export async function signUp(
   page: Page,
   email: string,
   password: string,
-  role: "artist" | "venue"
+  role: "artist" | "venue",
 ) {
   await page.goto("/signup");
 

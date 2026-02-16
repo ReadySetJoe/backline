@@ -152,20 +152,14 @@ export function MatchCard({
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
           {role === "ARTIST" && (
             <>
-              {venueCapacity != null && (
-                <span>Capacity: {venueCapacity}</span>
-              )}
-              {compensationType && (
-                <span>Pay: {compensationType}</span>
-              )}
+              {venueCapacity != null && <span>Capacity: {venueCapacity}</span>}
+              {compensationType && <span>Pay: {compensationType}</span>}
             </>
           )}
 
           {role === "VENUE" && (
             <>
-              {drawEstimate != null && (
-                <span>Draw: ~{drawEstimate}</span>
-              )}
+              {drawEstimate != null && <span>Draw: ~{drawEstimate}</span>}
               {sampleUrls && sampleUrls.length > 0 && (
                 <a
                   href={sampleUrls[0]}

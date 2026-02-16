@@ -15,19 +15,37 @@ const NAV_ITEMS: {
   icon: React.ComponentType<{ className?: string }>;
   roles: Role[];
 }[] = [
-  { href: "/dashboard", label: "Dashboard", icon: HomeIcon, roles: ["ARTIST", "VENUE"] },
-  { href: "/matches", label: "Matches", icon: HeartIcon, roles: ["ARTIST", "VENUE"] },
-  { href: "/messages", label: "Messages", icon: MessageIcon, roles: ["ARTIST", "VENUE"] },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: HomeIcon,
+    roles: ["ARTIST", "VENUE"],
+  },
+  {
+    href: "/matches",
+    label: "Matches",
+    icon: HeartIcon,
+    roles: ["ARTIST", "VENUE"],
+  },
+  {
+    href: "/messages",
+    label: "Messages",
+    icon: MessageIcon,
+    roles: ["ARTIST", "VENUE"],
+  },
   { href: "/shows", label: "Shows", icon: CalendarIcon, roles: ["VENUE"] },
-  { href: "/profile", label: "Profile", icon: UserIcon, roles: ["ARTIST", "VENUE"] },
+  {
+    href: "/profile",
+    label: "Profile",
+    icon: UserIcon,
+    roles: ["ARTIST", "VENUE"],
+  },
 ];
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
 
-  const visibleItems = NAV_ITEMS.filter((item) =>
-    item.roles.includes(role)
-  );
+  const visibleItems = NAV_ITEMS.filter((item) => item.roles.includes(role));
 
   return (
     <>
@@ -75,9 +93,7 @@ export function Sidebar({ role }: SidebarProps) {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center gap-1 px-2 py-1 text-xs font-medium transition-colors ${
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground"
+                  isActive ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 <Icon className="h-5 w-5" />

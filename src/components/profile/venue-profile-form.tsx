@@ -28,6 +28,8 @@ interface VenueProfileData {
   bio: string;
   address: string;
   city: string;
+  latitude: number | null;
+  longitude: number | null;
   capacity: number;
   genreIds: string[];
   hasPa: boolean;
@@ -53,6 +55,8 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
   const [bio, setBio] = useState(profile.bio);
   const [address, setAddress] = useState(profile.address);
   const [city, setCity] = useState(profile.city);
+  const [latitude, setLatitude] = useState<number | null>(profile.latitude);
+  const [longitude, setLongitude] = useState<number | null>(profile.longitude);
   const [capacity, setCapacity] = useState(String(profile.capacity));
   const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(
     profile.genreIds,
@@ -83,6 +87,8 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
         bio: bio.trim() || undefined,
         address: address.trim(),
         city: city.trim(),
+        latitude,
+        longitude,
         capacity: parseInt(capacity),
         hasPa,
         hasBackline,
@@ -170,7 +176,11 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
               placeholder="123 Main St"
               value={address}
               onValueChange={setAddress}
-              onPlaceSelect={(details) => setCity(details.city)}
+              onPlaceSelect={(details) => {
+                setCity(details.city);
+                setLatitude(details.latitude);
+                setLongitude(details.longitude);
+              }}
               required
             />
           </div>

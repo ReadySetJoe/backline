@@ -25,7 +25,7 @@ interface PlacesAutocompleteProps {
 
 function extractCityState(
   addressComponents: google.maps.GeocoderAddressComponent[],
-): PlaceDetails {
+): { city: string; state: string } {
   let city = "";
   let state = "";
 

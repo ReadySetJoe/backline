@@ -37,6 +37,8 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
 
   // Step 2: Venue Details
   const [capacity, setCapacity] = useState<string>("");
@@ -100,6 +102,8 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
         name: name.trim(),
         address: address.trim(),
         city: city.trim(),
+        latitude,
+        longitude,
         capacity: parseInt(capacity),
         hasPa,
         hasBackline,
@@ -185,7 +189,11 @@ export function VenueOnboarding({ genres }: VenueOnboardingProps) {
                 placeholder="123 Main St"
                 value={address}
                 onValueChange={setAddress}
-                onPlaceSelect={(details) => setCity(details.city)}
+                onPlaceSelect={(details) => {
+                  setCity(details.city);
+                  setLatitude(details.latitude);
+                  setLongitude(details.longitude);
+                }}
                 required
               />
             </div>

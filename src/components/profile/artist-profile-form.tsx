@@ -27,6 +27,8 @@ interface ArtistProfileData {
   name: string;
   bio: string;
   location: string;
+  latitude: number | null;
+  longitude: number | null;
   artistType: string;
   memberCount: number;
   genreIds: string[];
@@ -60,6 +62,8 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
     profile.genreIds,
   );
   const [location, setLocation] = useState(profile.location);
+  const [latitude, setLatitude] = useState<number | null>(profile.latitude);
+  const [longitude, setLongitude] = useState<number | null>(profile.longitude);
   const [drawEstimate, setDrawEstimate] = useState(
     profile.drawEstimate !== undefined ? String(profile.drawEstimate) : "",
   );
@@ -98,6 +102,8 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
         memberCount: parseInt(memberCount),
         genreIds: selectedGenreIds,
         location: location.trim(),
+        latitude,
+        longitude,
         drawEstimate: drawEstimate ? parseInt(drawEstimate) : undefined,
         typicalSetLength: typicalSetLength
           ? parseInt(typicalSetLength)
@@ -268,6 +274,10 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
               placeholder="City, State"
               value={location}
               onValueChange={setLocation}
+              onPlaceSelect={(details) => {
+                setLatitude(details.latitude);
+                setLongitude(details.longitude);
+              }}
               required
             />
           </div>

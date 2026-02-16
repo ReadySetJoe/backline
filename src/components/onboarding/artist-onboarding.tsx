@@ -44,6 +44,8 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
 
   // Step 3: Details
   const [location, setLocation] = useState("");
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
   const [drawEstimate, setDrawEstimate] = useState<string>("");
   const [typicalSetLength, setTypicalSetLength] = useState<string>("");
   const [availabilityPreference, setAvailabilityPreference] =
@@ -106,6 +108,8 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
         memberCount: parseInt(memberCount),
         genreIds: selectedGenreIds,
         location: location.trim(),
+        latitude,
+        longitude,
         drawEstimate: drawEstimate ? parseInt(drawEstimate) : undefined,
         typicalSetLength: typicalSetLength
           ? parseInt(typicalSetLength)
@@ -265,6 +269,10 @@ export function ArtistOnboarding({ genres }: ArtistOnboardingProps) {
                 placeholder="City, State"
                 value={location}
                 onValueChange={setLocation}
+                onPlaceSelect={(details) => {
+                  setLatitude(details.latitude);
+                  setLongitude(details.longitude);
+                }}
                 required
               />
             </div>

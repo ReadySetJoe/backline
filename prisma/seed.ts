@@ -1358,6 +1358,24 @@ async function main() {
   }
   console.log(`Seeded ${venueCount} venues with ${showCount} shows`);
 
+  // 4. Seed super admin
+  const adminEmail = "admin@backline.com";
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: adminEmail },
+  });
+  if (!existingAdmin) {
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        passwordHash,
+        role: "SUPER_ADMIN",
+      },
+    });
+    console.log("Seeded super admin (admin@backline.com)");
+  } else {
+    console.log("  Skipping admin (already exists)");
+  }
+
   console.log("\nDone! All users have password: password123");
   console.log("Run the matching engine to generate matches.");
 }

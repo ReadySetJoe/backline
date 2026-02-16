@@ -8,7 +8,6 @@ import {
   compensationScore,
   totalScore,
   haversineDistance,
-  MAX_MATCH_DISTANCE_MILES,
 } from "../score";
 
 describe("genreScore", () => {

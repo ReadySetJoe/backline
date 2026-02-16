@@ -78,6 +78,8 @@ type ArtistSeed = {
     | "WEEKNIGHTS"
     | "ANY_NIGHT"
     | "SPECIFIC_DATES";
+  latitude: number;
+  longitude: number;
 };
 
 const artists: ArtistSeed[] = [
@@ -92,6 +94,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 180,
     typicalSetLength: 60,
     availabilityPreference: "WEEKENDS",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Concrete Jungle Brass",
@@ -103,6 +107,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 220,
     typicalSetLength: 75,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Neon Requiem",
@@ -114,6 +120,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 90,
     typicalSetLength: 45,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "DJ Prism",
@@ -125,6 +133,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 300,
     typicalSetLength: 90,
     availabilityPreference: "WEEKENDS",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "The Velvet Syndrome",
@@ -136,6 +146,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 150,
     typicalSetLength: 50,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Subway Ghosts",
@@ -147,6 +159,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 60,
     typicalSetLength: 40,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "The Wrecking Crew",
@@ -158,6 +172,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 250,
     typicalSetLength: 35,
     availabilityPreference: "WEEKENDS",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Luna Moth",
@@ -169,6 +185,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 40,
     typicalSetLength: 45,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Brass Riot",
@@ -180,6 +198,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 200,
     typicalSetLength: 60,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   {
     name: "Chrome Cathedral",
@@ -191,6 +211,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 120,
     typicalSetLength: 55,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 40.7128,
+    longitude: -74.006,
   },
   // NYC suburbs
   {
@@ -203,6 +225,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 50,
     typicalSetLength: 50,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 40.744,
+    longitude: -74.0324,
   },
   {
     name: "The Brownstone Sessions",
@@ -214,6 +238,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 70,
     typicalSetLength: 45,
     availabilityPreference: "WEEKENDS",
+    latitude: 40.7178,
+    longitude: -74.0431,
   },
 
   // ---- AUSTIN, TX (6 in-city + 2 suburb) ----
@@ -227,6 +253,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 180,
     typicalSetLength: 60,
     availabilityPreference: "WEEKENDS",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   {
     name: "Cactus Bloom",
@@ -238,6 +266,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 55,
     typicalSetLength: 40,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   {
     name: "The Armadillo Kings",
@@ -249,6 +279,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 140,
     typicalSetLength: 70,
     availabilityPreference: "WEEKENDS",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   {
     name: "Desert Mirage",
@@ -260,6 +292,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 45,
     typicalSetLength: 60,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   {
     name: "Violet Haze",
@@ -271,6 +305,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 100,
     typicalSetLength: 50,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   {
     name: "The Porch Sitters",
@@ -282,6 +318,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 35,
     typicalSetLength: 45,
     availabilityPreference: "WEEKENDS",
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   // Austin suburbs
   {
@@ -294,6 +332,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 110,
     typicalSetLength: 45,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 30.5083,
+    longitude: -97.6789,
   },
   {
     name: "Lady Thunderbird",
@@ -305,6 +345,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 65,
     typicalSetLength: 40,
     availabilityPreference: "WEEKENDS",
+    latitude: 29.8833,
+    longitude: -97.9414,
   },
 
   // ---- NASHVILLE, TN (5 in-city + 2 suburb) ----
@@ -318,6 +360,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 50,
     typicalSetLength: 45,
     availabilityPreference: "WEEKENDS",
+    latitude: 36.1627,
+    longitude: -86.7816,
   },
   {
     name: "The Honky Tonk Heroes",
@@ -329,6 +373,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 160,
     typicalSetLength: 75,
     availabilityPreference: "WEEKENDS",
+    latitude: 36.1627,
+    longitude: -86.7816,
   },
   {
     name: "Magnolia Freight",
@@ -340,6 +386,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 90,
     typicalSetLength: 50,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 36.1627,
+    longitude: -86.7816,
   },
   {
     name: "The Glass Bottles",
@@ -351,6 +399,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 45,
     typicalSetLength: 40,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 36.1627,
+    longitude: -86.7816,
   },
   {
     name: "Rattlesnake Rodeo",
@@ -362,6 +412,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 110,
     typicalSetLength: 35,
     availabilityPreference: "WEEKENDS",
+    latitude: 36.1627,
+    longitude: -86.7816,
   },
   // Nashville suburbs
   {
@@ -374,6 +426,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 55,
     typicalSetLength: 45,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 35.9251,
+    longitude: -86.8689,
   },
   {
     name: "The River Rats",
@@ -385,6 +439,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 75,
     typicalSetLength: 50,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 35.8456,
+    longitude: -86.3903,
   },
 
   // ---- ATLANTA, GA (5 in-city + 2 suburb) ----
@@ -398,6 +454,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 220,
     typicalSetLength: 70,
     availabilityPreference: "WEEKENDS",
+    latitude: 33.749,
+    longitude: -84.388,
   },
   {
     name: "The ATL Brass Band",
@@ -409,6 +467,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 180,
     typicalSetLength: 60,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 33.749,
+    longitude: -84.388,
   },
   {
     name: "Kudzu Kings",
@@ -420,6 +480,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 100,
     typicalSetLength: 55,
     availabilityPreference: "WEEKENDS",
+    latitude: 33.749,
+    longitude: -84.388,
   },
   {
     name: "Indigo Dreams",
@@ -431,6 +493,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 90,
     typicalSetLength: 45,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 33.749,
+    longitude: -84.388,
   },
   {
     name: "The Treeline",
@@ -442,6 +506,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 40,
     typicalSetLength: 40,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 33.749,
+    longitude: -84.388,
   },
   // Atlanta suburbs
   {
@@ -454,6 +520,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 130,
     typicalSetLength: 50,
     availabilityPreference: "WEEKENDS",
+    latitude: 33.7748,
+    longitude: -84.2963,
   },
   {
     name: "The Rust Belt",
@@ -465,6 +533,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 95,
     typicalSetLength: 30,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 33.9526,
+    longitude: -84.5499,
   },
 
   // ---- ASHEVILLE, NC (4 in-city + 1 suburb) ----
@@ -478,6 +548,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 80,
     typicalSetLength: 55,
     availabilityPreference: "WEEKENDS",
+    latitude: 35.5951,
+    longitude: -82.5515,
   },
   {
     name: "The Wildflower Collective",
@@ -489,6 +561,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 110,
     typicalSetLength: 65,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 35.5951,
+    longitude: -82.5515,
   },
   {
     name: "Appalachian Gothic",
@@ -500,6 +574,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 35,
     typicalSetLength: 40,
     availabilityPreference: "WEEKNIGHTS",
+    latitude: 35.5951,
+    longitude: -82.5515,
   },
   {
     name: "Ember & Ash",
@@ -511,6 +587,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 25,
     typicalSetLength: 35,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 35.5951,
+    longitude: -82.5515,
   },
   // Asheville suburb
   {
@@ -523,6 +601,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 85,
     typicalSetLength: 50,
     availabilityPreference: "WEEKENDS",
+    latitude: 35.6179,
+    longitude: -82.3212,
   },
 
   // ---- GREENVILLE, SC (2 in-city + 1 suburb) ----
@@ -536,6 +616,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 90,
     typicalSetLength: 55,
     availabilityPreference: "WEEKENDS",
+    latitude: 34.8526,
+    longitude: -82.394,
   },
   {
     name: "Palmetto Dusk",
@@ -547,6 +629,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 30,
     typicalSetLength: 40,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 34.8526,
+    longitude: -82.394,
   },
   // Greenville suburb
   {
@@ -559,6 +643,8 @@ const artists: ArtistSeed[] = [
     drawEstimate: 65,
     typicalSetLength: 35,
     availabilityPreference: "ANY_NIGHT",
+    latitude: 34.9496,
+    longitude: -81.932,
   },
 ];
 
@@ -585,6 +671,8 @@ type VenueSeed = {
   hasPa: boolean;
   hasBackline: boolean;
   stageSize: string;
+  latitude: number;
+  longitude: number;
   shows: ShowSeed[];
 };
 
@@ -601,6 +689,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Medium (20x15)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "Friday Night Fuzz",
@@ -639,6 +729,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Small (15x12)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "Late Night Jazz",
@@ -669,6 +761,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Large (40x25)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "Indie Megashow",
@@ -699,6 +793,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Small (12x10)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "Songwriter Showcase",
@@ -729,6 +825,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Medium (18x14)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "Rising Tides",
@@ -767,6 +865,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Large (35x20)",
+    latitude: 40.7128,
+    longitude: -74.006,
     shows: [
       {
         title: "R&B After Hours",
@@ -799,6 +899,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Medium (22x16)",
+    latitude: 30.2672,
+    longitude: -97.7431,
     shows: [
       {
         title: "Red River Rumble",
@@ -829,6 +931,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Small (15x12)",
+    latitude: 30.2672,
+    longitude: -97.7431,
     shows: [
       {
         title: "Honky Tonk Tuesday",
@@ -867,6 +971,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Large (30x18)",
+    latitude: 30.2672,
+    longitude: -97.7431,
     shows: [
       {
         title: "Frequency Friday",
@@ -897,6 +1003,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Tiny (10x8)",
+    latitude: 30.2672,
+    longitude: -97.7431,
     shows: [
       {
         title: "Open Mic Spotlight",
@@ -929,6 +1037,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Small (14x10)",
+    latitude: 36.1627,
+    longitude: -86.7816,
     shows: [
       {
         title: "Garage Night",
@@ -959,6 +1069,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Tiny (10x8)",
+    latitude: 36.1627,
+    longitude: -86.7816,
     shows: [
       {
         title: "In the Round",
@@ -989,6 +1101,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Medium (20x15)",
+    latitude: 36.1627,
+    longitude: -86.7816,
     shows: [
       {
         title: "Rock Block",
@@ -1029,6 +1143,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Small (16x12)",
+    latitude: 33.749,
+    longitude: -84.388,
     shows: [
       {
         title: "Punk & Pints",
@@ -1059,6 +1175,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Large (35x20)",
+    latitude: 33.749,
+    longitude: -84.388,
     shows: [
       {
         title: "ATL Funk Fest",
@@ -1097,6 +1215,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Small (12x10)",
+    latitude: 33.749,
+    longitude: -84.388,
     shows: [
       {
         title: "Songwriter Night",
@@ -1129,6 +1249,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Large (30x18)",
+    latitude: 35.5951,
+    longitude: -82.5515,
     shows: [
       {
         title: "Mountain Music Festival",
@@ -1159,6 +1281,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: false,
     stageSize: "Small (14x10)",
+    latitude: 35.5951,
+    longitude: -82.5515,
     shows: [
       {
         title: "Roots & Branches",
@@ -1191,6 +1315,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Small (16x12)",
+    latitude: 34.8526,
+    longitude: -82.394,
     shows: [
       {
         title: "Upstate Showcase",
@@ -1221,6 +1347,8 @@ const venues: VenueSeed[] = [
     hasPa: true,
     hasBackline: true,
     stageSize: "Medium (20x14)",
+    latitude: 34.8526,
+    longitude: -82.394,
     shows: [
       {
         title: "Punk Rock Bowling",
@@ -1291,6 +1419,8 @@ async function main() {
             name: a.name,
             bio: a.bio,
             location: a.location,
+            latitude: a.latitude,
+            longitude: a.longitude,
             artistType: a.artistType,
             memberCount: a.memberCount,
             drawEstimate: a.drawEstimate,
@@ -1327,6 +1457,8 @@ async function main() {
             bio: v.bio,
             address: v.address,
             city: v.city,
+            latitude: v.latitude,
+            longitude: v.longitude,
             capacity: v.capacity,
             hasPa: v.hasPa,
             hasBackline: v.hasBackline,

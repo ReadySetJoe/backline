@@ -9,6 +9,13 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { ArtistType } from "@prisma/client";
+
+const ARTIST_TYPE_TO_LABEL: Record<ArtistType, string> = {
+  SOLO: "Solo",
+  DUO: "Duo",
+  FULL_BAND: "Band",
+};
 
 export default async function AdminArtistsPage() {
   const artists = await db.artistProfile.findMany({
@@ -39,7 +46,7 @@ export default async function AdminArtistsPage() {
               <TableCell>{artist.name}</TableCell>
               <TableCell>{artist.user.email}</TableCell>
               <TableCell>{artist.location}</TableCell>
-              <TableCell>{artist.artistType}</TableCell>
+              <TableCell>{ARTIST_TYPE_TO_LABEL[artist.artistType]}</TableCell>
               <TableCell>{artist.memberCount}</TableCell>
               <TableCell>{artist.drawEstimate ?? "N/A"}</TableCell>
               <TableCell>

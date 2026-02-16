@@ -70,8 +70,6 @@ export function MatchCard({
   const [isPending, startTransition] = useTransition();
   const [currentStatus, setCurrentStatus] = useState(status);
 
-  const scorePercent = Math.round(score * 100);
-
   // Determine if the other side has already liked
   const otherSideLiked =
     (role === "ARTIST" && currentStatus === "LIKED_BY_VENUE") ||
@@ -132,7 +130,7 @@ export function MatchCard({
           </div>
           <div className="flex flex-col items-end gap-1">
             <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-              {scorePercent}% match
+              {score}% match
             </span>
           </div>
         </div>

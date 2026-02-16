@@ -23,12 +23,18 @@ export function ResetMatchButton({
   artistName,
 }: ResetMatchButtonProps) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function handleReset() {
+    setError(null);
     startTransition(async () => {
-      await resetMatch(matchId);
-      setOpen(false);
+      const result = await resetMatch(matchId);
+      if (result.success) {
+        setOpen(false);
+      } else {
+        setError(result.error ?? "Failed to reset");
+      }
     });
   }
 
@@ -46,6 +52,7 @@ export function ResetMatchButton({
             Reset match for {artistName} back to Suggested?
           </DialogDescription>
         </DialogHeader>
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel

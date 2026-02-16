@@ -20,12 +20,18 @@ interface CancelShowButtonProps {
 
 export function CancelShowButton({ showId, title }: CancelShowButtonProps) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function handleCancel() {
+    setError(null);
     startTransition(async () => {
-      await cancelShow(showId);
-      setOpen(false);
+      const result = await cancelShow(showId);
+      if (result.success) {
+        setOpen(false);
+      } else {
+        setError(result.error ?? "Failed to cancel");
+      }
     });
   }
 
@@ -43,6 +49,7 @@ export function CancelShowButton({ showId, title }: CancelShowButtonProps) {
             Are you sure you want to cancel {title}?
           </DialogDescription>
         </DialogHeader>
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             No, keep it

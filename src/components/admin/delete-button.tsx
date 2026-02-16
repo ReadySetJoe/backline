@@ -20,12 +20,18 @@ interface DeleteButtonProps {
 
 export function DeleteButton({ userId, label }: DeleteButtonProps) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
+    setError(null);
     startTransition(async () => {
-      await deleteUser(userId);
-      setOpen(false);
+      const result = await deleteUser(userId);
+      if (result.success) {
+        setOpen(false);
+      } else {
+        setError(result.error ?? "Failed to delete");
+      }
     });
   }
 
@@ -43,6 +49,7 @@ export function DeleteButton({ userId, label }: DeleteButtonProps) {
             Are you sure you want to delete {label}? This cannot be undone.
           </DialogDescription>
         </DialogHeader>
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel

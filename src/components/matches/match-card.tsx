@@ -35,10 +35,16 @@ interface MatchCardProps {
   genres: { id: string; name: string }[];
 }
 
-const ARTIST_TYPE_LABELS: Record<ArtistType, string> = {
+export const ARTIST_TYPE_LABELS: Record<ArtistType, string> = {
   SOLO: "Solo",
   DUO: "Duo",
   FULL_BAND: "Full Band",
+};
+
+export const PAYMENT_TYPE_LABELS: Record<string, string> = {
+  door_split: "Door Split",
+  guarantee: "Guarantee",
+  other: "Other",
 };
 
 function formatShowDate(date: Date): string {
@@ -151,7 +157,9 @@ export function MatchCard({
           {role === "ARTIST" && (
             <>
               {venueCapacity != null && <span>Capacity: {venueCapacity}</span>}
-              {compensationType && <span>Pay: {compensationType}</span>}
+              {compensationType && (
+                <span>Pay: {PAYMENT_TYPE_LABELS[compensationType]}</span>
+              )}
             </>
           )}
 

@@ -46,13 +46,20 @@ enum AvailabilityPreference {
   SPECIFIC_DATES
 }
 
+enum CompensationType {
+  DOOR_SPLIT
+  GUARANTEE
+  GUARANTEE_PLUS_DOOR_SPLIT
+  OTHER
+}
+
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  passwordHash  String
-  role          Role
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   artistProfile ArtistProfile?
   venueProfile  VenueProfile?
@@ -158,18 +165,18 @@ model VenueProfile {
 }
 
 model Show {
-  id               String     @id @default(cuid())
+  id               String            @id @default(cuid())
   venueId          String
   date             DateTime
   title            String?
   note             String?
-  slotsTotal       Int        @default(3)
-  slotsFilled      Int        @default(0)
-  status           ShowStatus @default(OPEN)
-  compensationType String?
+  slotsTotal       Int               @default(3)
+  slotsFilled      Int               @default(0)
+  status           ShowStatus        @default(OPEN)
+  compensationType CompensationType?
   compensationNote String?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   venue   VenueProfile @relation(fields: [venueId], references: [id], onDelete: Cascade)
   genres  Genre[]

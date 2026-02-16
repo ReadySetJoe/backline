@@ -122,6 +122,8 @@ model ArtistProfile {
   profileImage           String?
   bannerImage            String?
   location               String
+  latitude               Float?
+  longitude              Float?
   artistType             ArtistType
   memberCount            Int                    @default(1)
   spotifyUrl             String?
@@ -149,6 +151,8 @@ model VenueProfile {
   bannerImage    String?
   address        String
   city           String
+  latitude       Float?
+  longitude      Float?
   capacity       Int
   hasPa          Boolean        @default(false)
   hasBackline    Boolean        @default(false)

@@ -15,6 +15,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  if (session.user.role === "SUPER_ADMIN") {
+    redirect("/admin");
+  }
+
   // Check for profile existence — redirect to onboarding if not set up
   let profileName: string | null = null;
 

@@ -116,7 +116,10 @@ export default async function MatchesPage() {
         </p>
       </div>
 
-      <MatchQueue matches={matches} role={session.user.role} />
+      <MatchQueue
+        matches={matches}
+        role={session.user.role as "ARTIST" | "VENUE"}
+      />
     </div>
   );
 }

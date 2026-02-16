@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
-import { markMessagesRead } from "@/actions/message";
 import { Chat, type ChatMessage } from "@/components/messages/chat";
 
 interface ConversationPageProps {
@@ -62,8 +61,15 @@ export default async function ConversationPage({
     notFound();
   }
 
-  // Mark messages as read
-  await markMessagesRead(conversationId);
+  // Mark unread messages from the other party as read
+  await db.message.updateMany({
+    where: {
+      conversationId,
+      senderId: { not: session.user.id },
+      read: false,
+    },
+    data: { read: true },
+  });
 
   // Determine the other party's name
   const otherPartyName = isArtist

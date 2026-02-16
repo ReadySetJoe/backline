@@ -27,18 +27,56 @@ interface MatchQueueProps {
   role: "ARTIST" | "VENUE";
 }
 
-const ACTIVE_STATUSES: MatchStatus[] = [
-  "SUGGESTED",
-  "LIKED_BY_ARTIST",
-  "LIKED_BY_VENUE",
-  "MUTUAL",
-];
-
 export function MatchQueue({ matches, role }: MatchQueueProps) {
+  // "Suggested" = needs action: new suggestions + the other side liked you
+  const suggestedStatuses: MatchStatus[] =
+    role === "ARTIST"
+      ? ["SUGGESTED", "LIKED_BY_VENUE"]
+      : ["SUGGESTED", "LIKED_BY_ARTIST"];
+
+  // "Interested" = you acted: you liked (waiting) + mutual
+  const interestedStatuses: MatchStatus[] =
+    role === "ARTIST"
+      ? ["LIKED_BY_ARTIST", "MUTUAL"]
+      : ["LIKED_BY_VENUE", "MUTUAL"];
+
   const suggestedMatches = matches.filter((m) =>
-    ACTIVE_STATUSES.includes(m.status),
+    suggestedStatuses.includes(m.status),
+  );
+  const interestedMatches = matches.filter((m) =>
+    interestedStatuses.includes(m.status),
   );
   const passedMatches = matches.filter((m) => m.status === "PASSED");
+
+  function renderCards(
+    list: MatchData[],
+    tab: "suggested" | "interested" | "passed",
+  ) {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {list.map((match) => (
+          <MatchCard
+            key={match.id}
+            matchId={match.id}
+            status={match.status}
+            score={match.score}
+            role={role}
+            tab={tab}
+            genres={match.genres}
+            venueName={match.venueName}
+            showTitle={match.showTitle}
+            showDate={match.showDate ? new Date(match.showDate) : undefined}
+            venueCapacity={match.venueCapacity}
+            compensationType={match.compensationType}
+            artistName={match.artistName}
+            drawEstimate={match.drawEstimate}
+            artistType={match.artistType}
+            sampleUrls={match.sampleUrls}
+          />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <Tabs defaultValue="suggested" className="w-full">
@@ -46,6 +84,10 @@ export function MatchQueue({ matches, role }: MatchQueueProps) {
         <TabsTrigger value="suggested">
           Suggested
           {suggestedMatches.length > 0 && ` (${suggestedMatches.length})`}
+        </TabsTrigger>
+        <TabsTrigger value="interested">
+          Interested
+          {interestedMatches.length > 0 && ` (${interestedMatches.length})`}
         </TabsTrigger>
         <TabsTrigger value="passed">
           Passed{passedMatches.length > 0 && ` (${passedMatches.length})`}
@@ -60,28 +102,19 @@ export function MatchQueue({ matches, role }: MatchQueueProps) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {suggestedMatches.map((match) => (
-              <MatchCard
-                key={match.id}
-                matchId={match.id}
-                status={match.status}
-                score={match.score}
-                role={role}
-                tab="suggested"
-                genres={match.genres}
-                venueName={match.venueName}
-                showTitle={match.showTitle}
-                showDate={match.showDate ? new Date(match.showDate) : undefined}
-                venueCapacity={match.venueCapacity}
-                compensationType={match.compensationType}
-                artistName={match.artistName}
-                drawEstimate={match.drawEstimate}
-                artistType={match.artistType}
-                sampleUrls={match.sampleUrls}
-              />
-            ))}
+          renderCards(suggestedMatches, "suggested")
+        )}
+      </TabsContent>
+
+      <TabsContent value="interested" className="mt-4">
+        {interestedMatches.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No interested matches yet. Like some suggestions to get started!
+            </p>
           </div>
+        ) : (
+          renderCards(interestedMatches, "interested")
         )}
       </TabsContent>
 
@@ -91,28 +124,7 @@ export function MatchQueue({ matches, role }: MatchQueueProps) {
             <p className="text-muted-foreground text-lg">No passed matches.</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {passedMatches.map((match) => (
-              <MatchCard
-                key={match.id}
-                matchId={match.id}
-                status={match.status}
-                score={match.score}
-                role={role}
-                tab="passed"
-                genres={match.genres}
-                venueName={match.venueName}
-                showTitle={match.showTitle}
-                showDate={match.showDate ? new Date(match.showDate) : undefined}
-                venueCapacity={match.venueCapacity}
-                compensationType={match.compensationType}
-                artistName={match.artistName}
-                drawEstimate={match.drawEstimate}
-                artistType={match.artistType}
-                sampleUrls={match.sampleUrls}
-              />
-            ))}
-          </div>
+          renderCards(passedMatches, "passed")
         )}
       </TabsContent>
     </Tabs>

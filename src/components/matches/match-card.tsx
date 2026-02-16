@@ -19,7 +19,7 @@ interface MatchCardProps {
   status: MatchStatus;
   score: number;
   role: "ARTIST" | "VENUE";
-  tab: "suggested" | "passed";
+  tab: "suggested" | "interested" | "passed";
   // For artists viewing shows/venues
   venueName?: string;
   showTitle?: string | null;
@@ -80,6 +80,11 @@ export function MatchCard({
   const otherSideLiked =
     (role === "ARTIST" && currentStatus === "LIKED_BY_VENUE") ||
     (role === "VENUE" && currentStatus === "LIKED_BY_ARTIST");
+
+  // Determine if the current user has already liked
+  const youLiked =
+    (role === "ARTIST" && currentStatus === "LIKED_BY_ARTIST") ||
+    (role === "VENUE" && currentStatus === "LIKED_BY_VENUE");
 
   const isMutual = currentStatus === "MUTUAL";
 
@@ -180,6 +185,15 @@ export function MatchCard({
           )}
         </div>
 
+        {youLiked && (
+          <>
+            <Separator />
+            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+              You&apos;re interested — waiting for a response.
+            </p>
+          </>
+        )}
+
         {otherSideLiked && (
           <>
             <Separator />
@@ -200,7 +214,7 @@ export function MatchCard({
       </CardContent>
 
       <CardFooter className="gap-2">
-        {tab === "suggested" && !isMutual && (
+        {tab === "suggested" && (
           <>
             <Button
               size="sm"
@@ -224,7 +238,14 @@ export function MatchCard({
           </>
         )}
 
-        {tab === "suggested" && isMutual && (
+        {tab === "interested" && !isMutual && (
+          <Button size="sm" variant="outline" disabled className="flex-1">
+            <HeartIcon className="mr-1.5 h-4 w-4" />
+            Interested
+          </Button>
+        )}
+
+        {tab === "interested" && isMutual && (
           <Button size="sm" variant="outline" disabled className="flex-1">
             Matched
           </Button>

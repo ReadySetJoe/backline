@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { MatchStatus, ArtistType } from "@prisma/client";
+import type { MatchStatus, ArtistType, CompensationType } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ interface MatchCardProps {
   showTitle?: string | null;
   showDate?: Date;
   venueCapacity?: number;
-  compensationType?: string | null;
+  compensationType?: CompensationType | null;
   // For venues viewing artists
   artistName?: string;
   drawEstimate?: number | null;
@@ -41,10 +41,11 @@ export const ARTIST_TYPE_LABELS: Record<ArtistType, string> = {
   FULL_BAND: "Full Band",
 };
 
-export const PAYMENT_TYPE_LABELS: Record<string, string> = {
-  door_split: "Door Split",
-  guarantee: "Guarantee",
-  other: "Other",
+export const COMPENSATION_TYPE_LABELS: Record<CompensationType, string> = {
+  DOOR_SPLIT: "Door Split",
+  GUARANTEE: "Guarantee",
+  GUARANTEE_PLUS_DOOR_SPLIT: "Guarantee + Door Split",
+  OTHER: "Other",
 };
 
 function formatShowDate(date: Date): string {
@@ -163,7 +164,7 @@ export function MatchCard({
             <>
               {venueCapacity != null && <span>Capacity: {venueCapacity}</span>}
               {compensationType && (
-                <span>Pay: {PAYMENT_TYPE_LABELS[compensationType]}</span>
+                <span>Pay: {COMPENSATION_TYPE_LABELS[compensationType]}</span>
               )}
             </>
           )}

@@ -8,7 +8,9 @@ export const showSchema = z.object({
   note: z.string().max(500).optional(),
   slotsTotal: z.number().int().min(1).max(20).default(3),
   genreIds: z.array(z.string()).min(1, "Select at least 1 genre for this show"),
-  compensationType: z.string().optional(),
+  compensationType: z
+    .enum(["DOOR_SPLIT", "GUARANTEE", "GUARANTEE_PLUS_DOOR_SPLIT", "OTHER"])
+    .optional(),
   compensationNote: z.string().max(500).optional(),
 });
 

@@ -1479,7 +1479,7 @@ async function main() {
           title: s.title,
           date: daysFromNow(s.daysOut),
           slotsTotal: s.slotsTotal,
-          compensationType: s.compensationType,
+          compensationType: s.compensationType as CompensationType,
           compensationNote: s.compensationNote,
           genres: { connect: connectGenres(s.genres) },
         },

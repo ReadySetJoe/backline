@@ -5,6 +5,8 @@ export const venueProfileSchema = z.object({
   bio: z.string().max(1000).optional(),
   address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
+  latitude: z.number().min(-90).max(90).nullable().optional(),
+  longitude: z.number().min(-180).max(180).nullable().optional(),
   capacity: z.number().int().min(1, "Capacity must be at least 1"),
   genreIds: z.array(z.string()).min(1, "Select at least 1 genre"),
   hasPa: z.boolean().default(false),

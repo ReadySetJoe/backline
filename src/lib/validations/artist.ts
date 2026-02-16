@@ -4,6 +4,8 @@ export const artistProfileSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   bio: z.string().max(1000).optional(),
   location: z.string().min(1, "Location is required"),
+  latitude: z.number().min(-90).max(90).nullable().optional(),
+  longitude: z.number().min(-180).max(180).nullable().optional(),
   artistType: z.enum(["SOLO", "DUO", "FULL_BAND"]),
   memberCount: z.number().int().min(1).max(50),
   genreIds: z

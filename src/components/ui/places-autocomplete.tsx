@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 interface PlaceDetails {
   city: string;
   state: string;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 interface PlacesAutocompleteProps {
@@ -102,15 +104,19 @@ export function PlacesAutocomplete({
     try {
       const results = await getGeocode({ placeId });
       const { city, state } = extractCityState(results[0].address_components);
+      const location = results[0].geometry.location;
+      const latitude = location.lat();
+      const longitude = location.lng();
 
       if (type === "(cities)") {
         const formatted = state ? `${city}, ${state}` : city;
         onValueChange(formatted);
         setAutocompleteValue(formatted, false);
+        onPlaceSelect?.({ city, state, latitude, longitude });
       } else {
         onValueChange(description);
         setAutocompleteValue(description, false);
-        onPlaceSelect?.({ city, state });
+        onPlaceSelect?.({ city, state, latitude, longitude });
       }
     } catch {
       // On geocode failure, just use the description as-is

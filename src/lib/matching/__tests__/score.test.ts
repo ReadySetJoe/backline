@@ -7,6 +7,8 @@ import {
   availabilityScore,
   compensationScore,
   totalScore,
+  haversineDistance,
+  MAX_MATCH_DISTANCE_MILES,
 } from "../score";
 
 describe("genreScore", () => {
@@ -36,21 +38,55 @@ describe("genreScore", () => {
   });
 });
 
+describe("haversineDistance", () => {
+  it("returns 0 for identical coordinates", () => {
+    expect(haversineDistance(34.8526, -82.394, 34.8526, -82.394)).toBe(0);
+  });
+
+  it("computes correct distance between Greenville SC and Asheville NC (~52 mi)", () => {
+    const dist = haversineDistance(34.8526, -82.394, 35.5951, -82.5515);
+    expect(dist).toBeGreaterThan(50);
+    expect(dist).toBeLessThan(55);
+  });
+
+  it("computes correct distance between NYC and Hoboken NJ (~3 mi)", () => {
+    const dist = haversineDistance(40.7128, -74.006, 40.744, -74.0324);
+    expect(dist).toBeGreaterThan(2);
+    expect(dist).toBeLessThan(5);
+  });
+
+  it("computes correct distance between NYC and Austin TX (~1511 mi)", () => {
+    const dist = haversineDistance(40.7128, -74.006, 30.2672, -97.7431);
+    expect(dist).toBeGreaterThan(1500);
+    expect(dist).toBeLessThan(1520);
+  });
+});
+
 describe("locationScore", () => {
-  it("returns 1.0 for same city", () => {
-    expect(locationScore("Columbus, OH", "Columbus, OH")).toBe(1.0);
+  it("returns 1.0 for same coordinates (0 miles)", () => {
+    expect(locationScore(34.8526, -82.394, 34.8526, -82.394)).toBe(1.0);
   });
 
-  it("returns 1.0 for case-insensitive match", () => {
-    expect(locationScore("columbus, oh", "Columbus, OH")).toBe(1.0);
+  it("returns high score for nearby coordinates (~3 mi, NYC to Hoboken)", () => {
+    const score = locationScore(40.7128, -74.006, 40.744, -74.0324);
+    expect(score).toBeGreaterThan(0.95);
   });
 
-  it("matches city name when one has state and other doesn't", () => {
-    expect(locationScore("Greenville, SC", "Greenville")).toBe(1.0);
+  it("returns moderate score for ~34 miles (Nashville to Murfreesboro)", () => {
+    const score = locationScore(36.1627, -86.7816, 35.8456, -86.3903);
+    expect(score).toBeGreaterThan(0.7);
+    expect(score).toBeLessThan(0.85);
   });
 
-  it("returns 0.0 for different cities", () => {
-    expect(locationScore("Columbus, OH", "New York, NY")).toBe(0.0);
+  it("returns 0.0 for coordinates beyond 150 miles", () => {
+    // NYC to Columbus OH (~530 miles)
+    expect(locationScore(40.7128, -74.006, 39.9612, -82.9988)).toBe(0.0);
+  });
+
+  it("returns 0.0 when any coordinate is null", () => {
+    expect(locationScore(null, null, 34.8526, -82.394)).toBe(0.0);
+    expect(locationScore(34.8526, -82.394, null, null)).toBe(0.0);
+    expect(locationScore(null, null, null, null)).toBe(0.0);
   });
 });
 

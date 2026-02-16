@@ -13,6 +13,29 @@ const WEIGHTS = {
   compensation: 0.1,
 } as const;
 
+export const MAX_MATCH_DISTANCE_MILES = 150;
+
+/**
+ * Haversine formula — straight-line distance in miles between two lat/lng points.
+ */
+export function haversineDistance(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const R = 3958.8; // Earth's radius in miles
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 /**
  * Genre match using Jaccard similarity (intersection / union).
  * Returns 0.0 if either set is empty.
@@ -32,16 +55,29 @@ export function genreScore(
 }
 
 /**
- * Location match — city name match (case-insensitive).
- * Extracts city name before comma (e.g., "Columbus, OH" → "columbus").
- * Returns 1.0 for same city, 0.0 otherwise.
+ * Location match — graduated distance scoring.
+ * Returns 1.0 at 0 miles, linearly decreasing to 0.0 at MAX_MATCH_DISTANCE_MILES.
+ * Returns 0.0 if any coordinate is null (profile missing coordinates).
  */
 export function locationScore(
-  artistLocation: string,
-  venueCity: string,
+  artistLat: number | null,
+  artistLng: number | null,
+  venueLat: number | null,
+  venueLng: number | null,
 ): number {
-  const normalize = (s: string) => s.split(",")[0].toLowerCase().trim();
-  return normalize(artistLocation) === normalize(venueCity) ? 1.0 : 0.0;
+  if (
+    artistLat == null ||
+    artistLng == null ||
+    venueLat == null ||
+    venueLng == null
+  ) {
+    return 0.0;
+  }
+
+  const distance = haversineDistance(artistLat, artistLng, venueLat, venueLng);
+  if (distance >= MAX_MATCH_DISTANCE_MILES) return 0.0;
+
+  return 1.0 - distance / MAX_MATCH_DISTANCE_MILES;
 }
 
 /**

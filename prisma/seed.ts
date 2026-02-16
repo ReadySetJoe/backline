@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { CompensationType, PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -570,7 +570,7 @@ type ShowSeed = {
   daysOut: number; // days from now
   slotsTotal: number;
   genres: string[];
-  compensationType: string;
+  compensationType: CompensationType | null;
   compensationNote: string;
 };
 
@@ -607,7 +607,7 @@ const venues: VenueSeed[] = [
         daysOut: 10,
         slotsTotal: 3,
         genres: ["Rock", "Garage Rock", "Punk"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split after expenses",
       },
       {
@@ -615,7 +615,7 @@ const venues: VenueSeed[] = [
         daysOut: 17,
         slotsTotal: 3,
         genres: ["Post-Punk", "Shoegaze", "Indie Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -623,7 +623,7 @@ const venues: VenueSeed[] = [
         daysOut: 24,
         slotsTotal: 4,
         genres: ["Punk", "Hardcore", "Metal"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$150 per band",
       },
     ],
@@ -645,7 +645,7 @@ const venues: VenueSeed[] = [
         daysOut: 8,
         slotsTotal: 2,
         genres: ["Jazz", "Soul"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$300 per act",
       },
       {
@@ -653,7 +653,7 @@ const venues: VenueSeed[] = [
         daysOut: 15,
         slotsTotal: 2,
         genres: ["Blues", "Jazz", "Funk"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$250 per act",
       },
     ],
@@ -675,7 +675,7 @@ const venues: VenueSeed[] = [
         daysOut: 12,
         slotsTotal: 3,
         genres: ["Indie Rock", "Alternative", "Indie Pop"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$500 guarantee + 80% of door over $2000",
       },
       {
@@ -683,7 +683,7 @@ const venues: VenueSeed[] = [
         daysOut: 19,
         slotsTotal: 3,
         genres: ["Electronic", "Ambient", "Experimental"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$400 per act",
       },
     ],
@@ -705,7 +705,7 @@ const venues: VenueSeed[] = [
         daysOut: 7,
         slotsTotal: 4,
         genres: ["Singer-Songwriter", "Folk"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "60/40 door split",
       },
       {
@@ -713,7 +713,7 @@ const venues: VenueSeed[] = [
         daysOut: 21,
         slotsTotal: 3,
         genres: ["Folk", "Indie Rock", "Americana"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "65/35 door split",
       },
     ],
@@ -735,7 +735,7 @@ const venues: VenueSeed[] = [
         daysOut: 9,
         slotsTotal: 3,
         genres: ["Indie Pop", "Pop", "Alternative"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 after $500 expenses",
       },
       {
@@ -743,7 +743,7 @@ const venues: VenueSeed[] = [
         daysOut: 16,
         slotsTotal: 3,
         genres: ["Ska", "Punk", "Funk"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$200 per band",
       },
       {
@@ -751,7 +751,7 @@ const venues: VenueSeed[] = [
         daysOut: 22,
         slotsTotal: 3,
         genres: ["Metal", "Hardcore", "Experimental"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "75/25 door split",
       },
     ],
@@ -773,7 +773,7 @@ const venues: VenueSeed[] = [
         daysOut: 11,
         slotsTotal: 3,
         genres: ["R&B", "Soul", "Pop"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$400 guarantee + door split",
       },
       {
@@ -781,7 +781,7 @@ const venues: VenueSeed[] = [
         daysOut: 18,
         slotsTotal: 2,
         genres: ["Electronic", "DJ", "Hip Hop"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$500 per artist",
       },
     ],
@@ -805,7 +805,7 @@ const venues: VenueSeed[] = [
         daysOut: 14,
         slotsTotal: 4,
         genres: ["Rock", "Punk", "Garage Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -813,7 +813,7 @@ const venues: VenueSeed[] = [
         daysOut: 21,
         slotsTotal: 3,
         genres: ["Psychedelic", "Indie Rock", "Experimental"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "65/35 door split",
       },
     ],
@@ -835,7 +835,7 @@ const venues: VenueSeed[] = [
         daysOut: 11,
         slotsTotal: 2,
         genres: ["Country", "Americana"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "60/40 plus tips",
       },
       {
@@ -843,7 +843,7 @@ const venues: VenueSeed[] = [
         daysOut: 14,
         slotsTotal: 2,
         genres: ["Blues", "Rock", "Funk"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$200 per act",
       },
       {
@@ -851,7 +851,7 @@ const venues: VenueSeed[] = [
         daysOut: 25,
         slotsTotal: 3,
         genres: ["Bluegrass", "Folk"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
     ],
@@ -873,7 +873,7 @@ const venues: VenueSeed[] = [
         daysOut: 10,
         slotsTotal: 3,
         genres: ["Electronic", "Ambient", "DJ"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$350 per act",
       },
       {
@@ -881,7 +881,7 @@ const venues: VenueSeed[] = [
         daysOut: 20,
         slotsTotal: 3,
         genres: ["Alternative", "Indie Rock", "Pop"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$300 guarantee + 70% of door",
       },
     ],
@@ -903,7 +903,7 @@ const venues: VenueSeed[] = [
         daysOut: 7,
         slotsTotal: 5,
         genres: ["Singer-Songwriter", "Folk"],
-        compensationType: "tips",
+        compensationType: "tips" as CompensationType,
         compensationNote: "Tip jar — keep what you earn",
       },
       {
@@ -911,7 +911,7 @@ const venues: VenueSeed[] = [
         daysOut: 18,
         slotsTotal: 3,
         genres: ["Indie Rock", "Indie Pop", "Folk"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
     ],
@@ -935,7 +935,7 @@ const venues: VenueSeed[] = [
         daysOut: 9,
         slotsTotal: 3,
         genres: ["Garage Rock", "Punk", "Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -943,7 +943,7 @@ const venues: VenueSeed[] = [
         daysOut: 16,
         slotsTotal: 3,
         genres: ["Indie Rock", "Indie Pop", "Singer-Songwriter"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "65/35 door split",
       },
     ],
@@ -965,7 +965,7 @@ const venues: VenueSeed[] = [
         daysOut: 8,
         slotsTotal: 4,
         genres: ["Singer-Songwriter", "Folk", "Country"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$100 per songwriter",
       },
       {
@@ -973,7 +973,7 @@ const venues: VenueSeed[] = [
         daysOut: 13,
         slotsTotal: 3,
         genres: ["Bluegrass", "Folk", "Americana"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
     ],
@@ -995,7 +995,7 @@ const venues: VenueSeed[] = [
         daysOut: 12,
         slotsTotal: 3,
         genres: ["Rock", "Alternative", "Punk"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$200 guarantee + 70% of door",
       },
       {
@@ -1003,7 +1003,7 @@ const venues: VenueSeed[] = [
         daysOut: 19,
         slotsTotal: 3,
         genres: ["Country", "Americana", "Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -1011,7 +1011,7 @@ const venues: VenueSeed[] = [
         daysOut: 26,
         slotsTotal: 2,
         genres: ["Blues", "Rock", "Folk"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$250 per act",
       },
     ],
@@ -1035,7 +1035,7 @@ const venues: VenueSeed[] = [
         daysOut: 10,
         slotsTotal: 3,
         genres: ["Punk", "Hardcore", "Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -1043,7 +1043,7 @@ const venues: VenueSeed[] = [
         daysOut: 17,
         slotsTotal: 3,
         genres: ["Rock", "Blues", "Indie Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "65/35 door split",
       },
     ],
@@ -1065,7 +1065,7 @@ const venues: VenueSeed[] = [
         daysOut: 13,
         slotsTotal: 3,
         genres: ["Funk", "Soul", "R&B"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$400 guarantee + 75% of door",
       },
       {
@@ -1073,7 +1073,7 @@ const venues: VenueSeed[] = [
         daysOut: 20,
         slotsTotal: 3,
         genres: ["Hip Hop", "Rap", "Jazz"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$350 per act",
       },
       {
@@ -1081,7 +1081,7 @@ const venues: VenueSeed[] = [
         daysOut: 27,
         slotsTotal: 3,
         genres: ["Alternative", "Indie Rock", "Pop"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
     ],
@@ -1103,7 +1103,7 @@ const venues: VenueSeed[] = [
         daysOut: 9,
         slotsTotal: 4,
         genres: ["Singer-Songwriter", "Folk"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
       {
@@ -1111,7 +1111,7 @@ const venues: VenueSeed[] = [
         daysOut: 23,
         slotsTotal: 3,
         genres: ["Folk", "Americana", "Blues"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "60/40 door split",
       },
     ],
@@ -1135,7 +1135,7 @@ const venues: VenueSeed[] = [
         daysOut: 15,
         slotsTotal: 4,
         genres: ["Rock", "Indie Rock", "Folk"],
-        compensationType: "guarantee_plus_door",
+        compensationType: "guarantee_plus_door" as CompensationType,
         compensationNote: "$300 guarantee + 70% of door",
       },
       {
@@ -1143,7 +1143,7 @@ const venues: VenueSeed[] = [
         daysOut: 22,
         slotsTotal: 3,
         genres: ["Psychedelic", "Experimental", "Indie Rock"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
     ],
@@ -1165,7 +1165,7 @@ const venues: VenueSeed[] = [
         daysOut: 10,
         slotsTotal: 3,
         genres: ["Folk", "Bluegrass", "Americana"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
       {
@@ -1173,7 +1173,7 @@ const venues: VenueSeed[] = [
         daysOut: 24,
         slotsTotal: 2,
         genres: ["Country", "Folk", "Singer-Songwriter"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$150 per act",
       },
     ],
@@ -1197,7 +1197,7 @@ const venues: VenueSeed[] = [
         daysOut: 11,
         slotsTotal: 3,
         genres: ["Rock", "Indie Rock", "Americana"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "70/30 door split",
       },
       {
@@ -1205,7 +1205,7 @@ const venues: VenueSeed[] = [
         daysOut: 18,
         slotsTotal: 3,
         genres: ["Folk", "Singer-Songwriter"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "All door to artists",
       },
     ],
@@ -1227,7 +1227,7 @@ const venues: VenueSeed[] = [
         daysOut: 13,
         slotsTotal: 4,
         genres: ["Punk", "Rock", "Hardcore"],
-        compensationType: "door_split",
+        compensationType: "door_split" as CompensationType,
         compensationNote: "65/35 door split",
       },
       {
@@ -1235,7 +1235,7 @@ const venues: VenueSeed[] = [
         daysOut: 20,
         slotsTotal: 3,
         genres: ["Alternative", "Indie Rock", "Pop"],
-        compensationType: "flat_fee",
+        compensationType: "flat_fee" as CompensationType,
         compensationNote: "$175 per band",
       },
     ],

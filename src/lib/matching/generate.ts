@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { computeMatchScore } from "./compute";
+import { computeMatchScore, isWithinMatchDistance } from "./compute";
 
 /**
  * Generate matches for a specific show.
@@ -23,23 +23,30 @@ export async function generateMatchesForShow(showId: string) {
   const showGenreSlugs = show.genres.map((g) => g.slug);
 
   for (const artist of artists) {
-    const score = computeMatchScore(
-      {
-        genres: artist.genres.map((g) => g.slug),
-        location: artist.location,
-        drawEstimate: artist.drawEstimate,
-        availabilityPreference: artist.availabilityPreference,
-      },
-      {
-        genres: showGenreSlugs,
-        venueCity: show.venue.city,
-        venueCapacity: show.venue.capacity,
-        showDate: show.date,
-        compensationType: show.compensationType,
-      },
-    );
+    const artistData = {
+      genres: artist.genres.map((g) => g.slug),
+      location: artist.location,
+      latitude: artist.latitude,
+      longitude: artist.longitude,
+      drawEstimate: artist.drawEstimate,
+      availabilityPreference: artist.availabilityPreference,
+    };
 
-    // Only create matches above a minimum threshold
+    const showData = {
+      genres: showGenreSlugs,
+      venueCity: show.venue.city,
+      venueLatitude: show.venue.latitude,
+      venueLongitude: show.venue.longitude,
+      venueCapacity: show.venue.capacity,
+      showDate: show.date,
+      compensationType: show.compensationType,
+    };
+
+    // Hard distance cutoff — skip artists beyond max range
+    if (!isWithinMatchDistance(artistData, showData)) continue;
+
+    const score = computeMatchScore(artistData, showData);
+
     if (score >= 10) {
       await db.match.upsert({
         where: {
@@ -52,7 +59,6 @@ export async function generateMatchesForShow(showId: string) {
         },
         update: {
           score,
-          // Don't reset status if already interacted with
         },
       });
     }

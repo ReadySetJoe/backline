@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createShow } from "@/actions/show";
+import { CompensationType } from "@prisma/client";
 
 interface Genre {
   id: string;
@@ -37,7 +38,9 @@ export function ShowForm({ genres }: ShowFormProps) {
   const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>([]);
   const [slotsTotal, setSlotsTotal] = useState("3");
   const [note, setNote] = useState("");
-  const [compensationType, setCompensationType] = useState("");
+  const [compensationType, setCompensationType] = useState<
+    CompensationType | ""
+  >("");
   const [compensationNote, setCompensationNote] = useState("");
 
   function toggleGenre(genreId: string) {
@@ -189,16 +192,24 @@ export function ShowForm({ genres }: ShowFormProps) {
             </Label>
             <Select
               value={compensationType}
-              onValueChange={setCompensationType}
+              onValueChange={(value) =>
+                setCompensationType(value as CompensationType)
+              }
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select compensation type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Door Split">Door Split</SelectItem>
-                <SelectItem value="Guarantee">Guarantee</SelectItem>
-                <SelectItem value="Tip Jar">Tip Jar</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value={CompensationType.DOOR_SPLIT}>
+                  Door Split
+                </SelectItem>
+                <SelectItem value={CompensationType.GUARANTEE}>
+                  Guarantee
+                </SelectItem>
+                <SelectItem value={CompensationType.GUARANTEE_PLUS_DOOR_SPLIT}>
+                  Guarantee + Door Split
+                </SelectItem>
+                <SelectItem value={CompensationType.OTHER}>Other</SelectItem>
               </SelectContent>
             </Select>
           </div>

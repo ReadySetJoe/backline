@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CircleCheck, BookOpen, Music } from "lucide-react";
 
 const features = [

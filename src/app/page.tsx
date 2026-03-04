@@ -6,25 +6,47 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Sparkles, CalendarCheck, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CircleCheck, BookOpen, Music } from "lucide-react";
 
 const features = [
   {
-    icon: Sparkles,
-    title: "Smart Matching",
+    icon: CircleCheck,
+    title: "Match",
     description:
-      "We connect you with artists and venues that fit your sound, size, and schedule.",
+      "Connect with artists and venues that fit your sound, size, and schedule.",
   },
   {
-    icon: CalendarCheck,
-    title: "Book Shows Easily",
+    icon: BookOpen,
+    title: "Book",
     description:
-      "Create shows, find the right talent, and lock in your lineup.",
+      "Secure shows by finding the right talent and locking in your lineup.",
   },
   {
-    icon: MessageCircle,
-    title: "Direct Messaging",
-    description: "Chat directly with your matches to work out the details.",
+    icon: Music,
+    title: "Play",
+    description: "Take the stage with confidence and bring your sound to life.",
+  },
+] as const;
+
+const pricingTiers = [
+  {
+    name: "Basic",
+    price: "$0",
+    featured: false,
+    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
+  },
+  {
+    name: "Pro",
+    price: "$10",
+    featured: false,
+    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
+  },
+  {
+    name: "Pro +",
+    price: "$20",
+    featured: true,
+    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
   },
 ] as const;
 
@@ -43,17 +65,52 @@ export default function Home() {
       <section className="mx-auto w-full max-w-5xl px-6 pb-24">
         <div className="grid gap-6 sm:grid-cols-3">
           {features.map(({ icon: Icon, title, description }) => (
-            <Card key={title} className="border-border/60">
-              <CardHeader>
-                <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-primary/10">
-                  <Icon className="size-5 text-primary" />
-                </div>
-                <CardTitle>{title}</CardTitle>
-              </CardHeader>
+            <Card
+              key={title}
+              className="border-border/60 flex flex-col items-center text-center"
+            >
+              <Icon className="size-10 text-primary" />
+              <CardTitle className="text-2xl">{title}</CardTitle>
               <CardContent>
                 <CardDescription className="text-base">
                   {description}
                 </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="mx-auto w-full max-w-5xl px-6 pb-24">
+        <div className="grid gap-6 sm:grid-cols-3">
+          {pricingTiers.map(({ name, price, featured, items }) => (
+            <Card
+              key={name}
+              className={
+                featured ? "border-primary bg-card" : "border-border/60 bg-card"
+              }
+            >
+              <CardHeader>
+                <div className="flex items-baseline justify-between">
+                  <CardTitle className="text-xl">{name}</CardTitle>
+                  <p className="text-2xl font-bold">
+                    {price}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      /mo
+                    </span>
+                  </p>
+                </div>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <ul className="space-y-2 text-sm">
+                  {items.map((item, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="size-1.5 rounded-full bg-primary" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           ))}

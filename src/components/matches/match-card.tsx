@@ -189,7 +189,7 @@ export function MatchCard({
         {youLiked && (
           <>
             <Separator />
-            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-sm font-medium text-primary">
               You&apos;re interested — waiting for a response.
             </p>
           </>

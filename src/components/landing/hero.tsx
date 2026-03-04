@@ -1,36 +1,48 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Music, Mic2 } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="flex flex-col items-center justify-center gap-8 px-6 py-24 text-center sm:py-32 md:py-40">
-      <div className="flex flex-col items-center gap-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
-          <Music className="size-4" />
-          <span>Live music, connected</span>
+    <section className="relative overflow-hidden">
+      {/* Background image */}
+      <Image
+        src="/concert-crowd.jpg"
+        alt="Concert crowd with hands raised under stage lights"
+        fill
+        className="object-cover"
+        priority
+      />
+
+      {/* Dark overlay for text contrast */}
+      <div className="absolute inset-0 bg-background/60" />
+
+      {/* Top gradient blending into nav */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-linear-to-b from-background to-transparent" />
+
+      {/* Bottom gradient blending into next section */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-background to-transparent" />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center gap-8 px-6 py-32 text-center sm:py-40 md:py-48">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="max-w-3xl text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
+            <span className="block">Match.</span>
+            <span className="block">Book.</span>
+            <span className="block">Play.</span>
+          </h1>
+          <p className="max-w-xl text-lg text-white/90 sm:text-xl">
+            Connecting artists and venues the easy way.
+          </p>
         </div>
-        <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-          Find Your Next Show
-        </h1>
-        <p className="max-w-xl text-lg text-muted-foreground sm:text-xl">
-          Backline connects artists and venues to book live shows. No more cold
-          emails, no more guesswork — just the right match.
-        </p>
-      </div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-        <Button asChild size="lg" className="gap-2 text-base">
-          <Link href="/signup">
-            <Mic2 className="size-5" />
-            I&apos;m an Artist
-          </Link>
-        </Button>
-        <Button asChild size="lg" variant="outline" className="gap-2 text-base">
-          <Link href="/signup">
-            <Music className="size-5" />
-            I&apos;m a Venue
-          </Link>
-        </Button>
+        <div className="flex gap-3 sm:gap-4">
+          <Button asChild size="lg" variant="outline" className="text-base">
+            <Link href="/login">Log In</Link>
+          </Button>
+          <Button asChild size="lg" className="text-base">
+            <Link href="/signup">Sign Up</Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

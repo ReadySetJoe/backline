@@ -1,6 +1,6 @@
 "use client";
 
-import type { MatchStatus, ArtistType } from "@prisma/client";
+import type { MatchStatus, ArtistType, CompensationType } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MatchCard } from "@/components/matches/match-card";
 
@@ -14,7 +14,7 @@ export interface MatchData {
   showTitle?: string | null;
   showDate?: string; // serialized from server
   venueCapacity?: number;
-  compensationType?: string | null;
+  compensationType?: CompensationType | null;
   // Venue viewing artists
   artistName?: string;
   drawEstimate?: number | null;

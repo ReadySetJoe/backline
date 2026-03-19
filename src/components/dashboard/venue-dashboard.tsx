@@ -38,8 +38,10 @@ interface VenueDashboardProps {
 // ── Helpers ────────────────────────────────────────────────────────────
 
 function getInitials(name: string): string {
+  if (!name.trim()) return "?";
   return name
     .split(" ")
+    .filter(Boolean)
     .map((w) => w[0])
     .join("")
     .toUpperCase()
@@ -280,11 +282,19 @@ export function VenueDashboard({
 
       {/* ── Profile Completion ────────────────────────────────────── */}
       <section>
-        <div className="flex items-center gap-2 mb-4">
-          <h2 className="text-lg font-semibold">Profile Completion</h2>
-          <Badge variant="secondary" className="rounded-full text-xs">
-            {completedCount}/{profileItems.length} complete
-          </Badge>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold">Profile Completion</h2>
+            <Badge variant="secondary" className="rounded-full text-xs">
+              {completedCount}/{profileItems.length} complete
+            </Badge>
+          </div>
+          <Link
+            href="/profile"
+            className="text-sm text-primary hover:underline underline-offset-2"
+          >
+            Edit profile
+          </Link>
         </div>
 
         {allComplete ? (

@@ -128,34 +128,42 @@ async function VenueDashboardView({ userId }: { userId: string }) {
     showDate: m.show.date.toISOString(),
   }));
 
-  // Transform conversations → filter to unread only
-  const conversationSummaries = await Promise.all(
-    conversations.map(async (convo) => {
-      const unreadCount = await db.message.count({
-        where: {
-          conversationId: convo.id,
-          senderId: { not: userId },
-          read: false,
-        },
-      });
+  // Batch unread counts in a single query instead of N+1
+  const conversationIds = conversations.map((c) => c.id);
+  const unreadCounts =
+    conversationIds.length > 0
+      ? await db.message.groupBy({
+          by: ["conversationId"],
+          where: {
+            conversationId: { in: conversationIds },
+            senderId: { not: userId },
+            read: false,
+          },
+          _count: { id: true },
+        })
+      : [];
 
-      const isArtist = convo.match.artist.userId === userId;
-      const otherPartyName = isArtist
-        ? convo.match.show.venue.name
-        : convo.match.artist.name;
-
-      const lastMessage = convo.messages[0] ?? null;
-
-      return {
-        id: convo.id,
-        otherPartyName,
-        showTitle: convo.match.show.title,
-        lastMessageBody: lastMessage?.body ?? null,
-        lastMessageAt: lastMessage?.createdAt?.toISOString() ?? null,
-        unreadCount,
-      } satisfies ConversationSummary;
-    }),
+  const unreadMap = new Map(
+    unreadCounts.map((uc) => [uc.conversationId, uc._count.id]),
   );
+
+  const conversationSummaries = conversations.map((convo) => {
+    const isArtist = convo.match.artist.userId === userId;
+    const otherPartyName = isArtist
+      ? convo.match.show.venue.name
+      : convo.match.artist.name;
+
+    const lastMessage = convo.messages[0] ?? null;
+
+    return {
+      id: convo.id,
+      otherPartyName,
+      showTitle: convo.match.show.title,
+      lastMessageBody: lastMessage?.body ?? null,
+      lastMessageAt: lastMessage?.createdAt?.toISOString() ?? null,
+      unreadCount: unreadMap.get(convo.id) ?? 0,
+    } satisfies ConversationSummary;
+  });
 
   // Filter to unread only, sort by recency, take 3
   const unreadConversations = conversationSummaries

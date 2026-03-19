@@ -183,21 +183,32 @@ async function VenueDashboardView({ userId }: { userId: string }) {
 
   // Build profile completion checklist
   const profileItems = [
-    { label: "Bio", complete: !!venueProfile.bio },
-    { label: "Profile image", complete: !!venueProfile.profileImage },
-    { label: "Website URL", complete: !!venueProfile.websiteUrl },
-    { label: "Instagram URL", complete: !!venueProfile.instagramUrl },
-    { label: "Stage size", complete: !!venueProfile.stageSize },
-    { label: "PA system", complete: venueProfile.hasPa },
-    { label: "Backline", complete: venueProfile.hasBackline },
+    { label: "Add a bio", complete: !!venueProfile.bio },
+    { label: "Upload a profile image", complete: !!venueProfile.profileImage },
+    { label: "Add website URL", complete: !!venueProfile.websiteUrl },
+    { label: "Add Instagram URL", complete: !!venueProfile.instagramUrl },
+    { label: "Specify stage size", complete: !!venueProfile.stageSize },
+    { label: "Indicate PA system availability", complete: venueProfile.hasPa },
+    {
+      label: "Indicate backline availability",
+      complete: venueProfile.hasBackline,
+    },
   ];
 
   return (
-    <VenueDashboard
-      matches={matches}
-      conversations={unreadConversations}
-      shows={shows}
-      profileItems={profileItems}
-    />
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">
+          Find the right artists for your shows.
+        </p>
+      </div>
+      <VenueDashboard
+        matches={matches}
+        conversations={unreadConversations}
+        shows={shows}
+        profileItems={profileItems}
+      />
+    </div>
   );
 }

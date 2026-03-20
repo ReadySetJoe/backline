@@ -3,8 +3,9 @@
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { signUpSchema, type SignUpInput } from "@/lib/validations/auth";
-import { signIn } from "@/lib/auth";
+import { signIn, auth } from "@/lib/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { revalidatePath } from "next/cache";
 
 export async function signUp(input: SignUpInput) {
   const parsed = signUpSchema.safeParse(input);
@@ -53,6 +54,31 @@ export async function signUp(input: SignUpInput) {
       error: { email: ["Failed to sign in after registration"] },
     };
   }
+
+  return { success: true as const };
+}
+
+export async function setRole(role: "ARTIST" | "VENUE") {
+  const session = await auth();
+
+  if (!session?.user) {
+    return { success: false as const, error: "Not authenticated" };
+  }
+
+  if (session.user.role) {
+    return { success: false as const, error: "Role already set" };
+  }
+
+  if (role !== "ARTIST" && role !== "VENUE") {
+    return { success: false as const, error: "Invalid role" };
+  }
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { role },
+  });
+
+  revalidatePath("/onboarding");
 
   return { success: true as const };
 }

@@ -3,12 +3,18 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { ArtistOnboarding } from "@/components/onboarding/artist-onboarding";
 import { VenueOnboarding } from "@/components/onboarding/venue-onboarding";
+import { RoleSelection } from "@/components/onboarding/role-selection";
 
 export default async function OnboardingPage() {
   const session = await auth();
 
   if (!session?.user) {
     redirect("/login");
+  }
+
+  // Google users who haven't selected a role yet
+  if (!session.user.role) {
+    return <RoleSelection />;
   }
 
   // Check if user already has a profile

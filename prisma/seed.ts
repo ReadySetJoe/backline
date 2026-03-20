@@ -82,6 +82,22 @@ type ArtistSeed = {
   longitude: number;
 };
 
+function artistImageSeed(name: string) {
+  const s = slug(name);
+  return {
+    profileImage: `https://picsum.photos/seed/${s}-profile/400/400`,
+    bannerImage: `https://picsum.photos/seed/${s}-banner/1200/300`,
+  };
+}
+
+function venueImageSeed(name: string) {
+  const s = slug(name);
+  return {
+    profileImage: `https://picsum.photos/seed/${s}-profile/400/400`,
+    bannerImage: `https://picsum.photos/seed/${s}-banner/1200/300`,
+  };
+}
+
 const artists: ArtistSeed[] = [
   // ---- NEW YORK CITY (10 in-city + 2 suburb) ----
   {
@@ -1404,8 +1420,16 @@ async function main() {
   for (const a of artists) {
     const email = emailify(a.name);
     const existing = await prisma.user.findUnique({ where: { email } });
+
+    const images = artistImageSeed(a.name);
     if (existing) {
-      console.log(`  Skipping artist "${a.name}" (already exists)`);
+      await prisma.artistProfile.update({
+        where: { userId: existing.id },
+        data: {
+          bannerImage: images.bannerImage,
+          profileImage: images.profileImage,
+        },
+      });
       continue;
     }
 
@@ -1418,6 +1442,8 @@ async function main() {
           create: {
             name: a.name,
             bio: a.bio,
+            profileImage: images.profileImage,
+            bannerImage: images.bannerImage,
             location: a.location,
             latitude: a.latitude,
             longitude: a.longitude,
@@ -1441,7 +1467,15 @@ async function main() {
   for (const v of venues) {
     const email = emailify(v.name);
     const existing = await prisma.user.findUnique({ where: { email } });
+    const images = venueImageSeed(v.name);
     if (existing) {
+      await prisma.venueProfile.update({
+        where: { userId: existing.id },
+        data: {
+          bannerImage: images.bannerImage,
+          profileImage: images.profileImage,
+        },
+      });
       console.log(`  Skipping venue "${v.name}" (already exists)`);
       continue;
     }
@@ -1455,6 +1489,8 @@ async function main() {
           create: {
             name: v.name,
             bio: v.bio,
+            profileImage: images.profileImage,
+            bannerImage: images.bannerImage,
             address: v.address,
             city: v.city,
             latitude: v.latitude,

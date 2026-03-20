@@ -14,12 +14,24 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { likeMatch, passMatch, reconsiderMatch } from "@/actions/match";
 
+function getInitials(name: string): string {
+  if (!name.trim()) return "?";
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 interface MatchCardProps {
   matchId: string;
   status: MatchStatus;
   score: number;
   role: "ARTIST" | "VENUE";
   tab: "suggested" | "interested" | "passed";
+  profileImage?: string | null;
   // For artists viewing shows/venues
   venueName?: string;
   showTitle?: string | null;
@@ -63,6 +75,7 @@ export function MatchCard({
   score,
   role,
   tab,
+  profileImage,
   venueName,
   showTitle,
   showDate,
@@ -116,35 +129,47 @@ export function MatchCard({
     });
   }
 
+  const displayName = (role === "ARTIST" ? venueName : artistName) ?? "";
+
   return (
-    <Card className="transition-shadow hover:shadow-md">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-2">
-          <div className="space-y-1">
-            {role === "ARTIST" ? (
-              <>
-                <CardTitle className="text-lg">{venueName}</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  {showTitle || "Untitled Show"}
-                  {showDate && ` \u2014 ${formatShowDate(showDate)}`}
-                </p>
-              </>
-            ) : (
-              <>
-                <CardTitle className="text-lg">{artistName}</CardTitle>
-                {artistType && (
-                  <p className="text-sm text-muted-foreground">
-                    {ARTIST_TYPE_LABELS[artistType]}
-                  </p>
-                )}
-              </>
-            )}
+    <Card className="transition-shadow hover:shadow-md overflow-hidden">
+      {/* Hero image */}
+      <div className="relative h-36 bg-muted">
+        {profileImage ? (
+          <img
+            src={profileImage}
+            alt={displayName}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-3xl font-bold text-muted-foreground/40">
+            {getInitials(displayName)}
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-              {score}% match
-            </span>
-          </div>
+        )}
+        <span className="absolute top-2 right-2 inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
+          {score}% match
+        </span>
+      </div>
+
+      <CardHeader className="pt-3 pb-2">
+        <div className="space-y-1">
+          {role === "ARTIST" ? (
+            <>
+              <CardTitle className="text-lg">{venueName}</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {showTitle || "Untitled Show"}
+                {showDate && ` \u2014 ${formatShowDate(showDate)}`}
+              </p>
+            </>
+          ) : (
+            <>
+              <CardTitle className="text-lg">{artistName}</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {artistType && ARTIST_TYPE_LABELS[artistType]}
+                {showDate && ` \u2014 ${formatShowDate(showDate)}`}
+              </p>
+            </>
+          )}
         </div>
       </CardHeader>
 

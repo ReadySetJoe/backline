@@ -9,7 +9,7 @@ import { ShowCard } from "@/components/shows/show-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -160,8 +160,8 @@ export function VenueDashboard({
         {matches.length === 0 ? (
           <p className="text-muted-foreground">No new matches yet.</p>
         ) : (
-          <div className="grid gap-4">
-            {matches.slice(0, 5).map((match) => (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {matches.slice(0, 6).map((match) => (
               <MatchCard
                 key={match.id}
                 matchId={match.id}
@@ -170,6 +170,7 @@ export function VenueDashboard({
                 role="VENUE"
                 tab="suggested"
                 genres={match.genres}
+                profileImage={match.profileImage}
                 artistName={match.artistName}
                 drawEstimate={match.drawEstimate}
                 artistType={match.artistType}
@@ -201,6 +202,9 @@ export function VenueDashboard({
                 <Card className="transition-shadow hover:shadow-md cursor-pointer">
                   <CardContent className="flex items-center gap-3 py-3 px-4">
                     <Avatar>
+                      {convo.otherPartyImage && (
+                        <AvatarImage src={convo.otherPartyImage} alt="" />
+                      )}
                       <AvatarFallback>
                         {getInitials(convo.otherPartyName)}
                       </AvatarFallback>

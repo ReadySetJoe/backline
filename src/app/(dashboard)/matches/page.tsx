@@ -31,6 +31,7 @@ export default async function MatchesPage() {
               select: {
                 name: true,
                 capacity: true,
+                profileImage: true,
               },
             },
             genres: {
@@ -47,6 +48,7 @@ export default async function MatchesPage() {
       status: m.status,
       score: m.score,
       genres: m.show.genres,
+      profileImage: m.show.venue.profileImage,
       venueName: m.show.venue.name,
       showTitle: m.show.title,
       showDate: m.show.date.toISOString(),
@@ -73,6 +75,7 @@ export default async function MatchesPage() {
         artist: {
           select: {
             name: true,
+            profileImage: true,
             artistType: true,
             drawEstimate: true,
             sampleUrls: true,
@@ -96,6 +99,7 @@ export default async function MatchesPage() {
       status: m.status,
       score: m.score,
       genres: m.artist.genres,
+      profileImage: m.artist.profileImage,
       artistName: m.artist.name,
       artistType: m.artist.artistType,
       drawEstimate: m.artist.drawEstimate,

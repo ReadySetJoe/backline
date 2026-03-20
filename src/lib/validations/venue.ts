@@ -15,6 +15,8 @@ export const venueProfileSchema = z.object({
   ageRestriction: z
     .enum(["ALL_AGES", "EIGHTEEN_PLUS", "TWENTY_ONE_PLUS"])
     .default("ALL_AGES"),
+  profileImage: z.string().url().optional().or(z.literal("")),
+  bannerImage: z.string().url().optional().or(z.literal("")),
   websiteUrl: z.string().url().optional().or(z.literal("")),
   instagramUrl: z.string().url().optional().or(z.literal("")),
 });

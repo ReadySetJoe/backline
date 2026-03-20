@@ -25,14 +25,14 @@ export default async function ConversationPage({
       match: {
         include: {
           artist: {
-            select: { name: true, userId: true },
+            select: { name: true, userId: true, profileImage: true },
           },
           show: {
             select: {
               title: true,
               date: true,
               venue: {
-                select: { name: true, userId: true },
+                select: { name: true, userId: true, profileImage: true },
               },
             },
           },
@@ -71,10 +71,13 @@ export default async function ConversationPage({
     data: { read: true },
   });
 
-  // Determine the other party's name
+  // Determine the other party's name and image
   const otherPartyName = isArtist
     ? conversation.match.show.venue.name
     : conversation.match.artist.name;
+  const otherPartyImage = isArtist
+    ? conversation.match.show.venue.profileImage
+    : conversation.match.artist.profileImage;
 
   // Map messages to serializable format
   const chatMessages: ChatMessage[] = conversation.messages.map((msg) => ({
@@ -94,6 +97,7 @@ export default async function ConversationPage({
       currentUserId={session.user.id}
       currentUserEmail={session.user.email}
       otherPartyName={otherPartyName}
+      otherPartyImage={otherPartyImage}
       showTitle={conversation.match.show.title}
       artistName={conversation.match.artist.name}
       venueName={conversation.match.show.venue.name}

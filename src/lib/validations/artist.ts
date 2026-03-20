@@ -16,6 +16,8 @@ export const artistProfileSchema = z.object({
   bandcampUrl: z.string().url().optional().or(z.literal("")),
   instagramUrl: z.string().url().optional().or(z.literal("")),
   websiteUrl: z.string().url().optional().or(z.literal("")),
+  profileImage: z.string().url().optional().or(z.literal("")),
+  bannerImage: z.string().url().optional().or(z.literal("")),
   sampleUrls: z.array(z.string().url()).max(5).optional(),
   availabilityPreference: z
     .enum(["WEEKENDS", "WEEKNIGHTS", "ANY_NIGHT", "SPECIFIC_DATES"])

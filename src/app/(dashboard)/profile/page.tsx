@@ -32,6 +32,8 @@ export default async function ProfilePage() {
           profile={{
             name: profile.name,
             bio: profile.bio ?? "",
+            profileImage: profile.profileImage ?? "",
+            bannerImage: profile.bannerImage ?? "",
             location: profile.location,
             latitude: profile.latitude ?? null,
             longitude: profile.longitude ?? null,
@@ -69,6 +71,8 @@ export default async function ProfilePage() {
         profile={{
           name: profile.name,
           bio: profile.bio ?? "",
+          profileImage: profile.profileImage ?? "",
+          bannerImage: profile.bannerImage ?? "",
           address: profile.address,
           city: profile.city,
           latitude: profile.latitude ?? null,

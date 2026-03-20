@@ -26,12 +26,12 @@ export default async function MessagesPage() {
       match: {
         include: {
           artist: {
-            select: { name: true, userId: true },
+            select: { name: true, userId: true, profileImage: true },
           },
           show: {
             include: {
               venue: {
-                select: { name: true, userId: true },
+                select: { name: true, userId: true, profileImage: true },
               },
             },
           },
@@ -64,12 +64,16 @@ export default async function MessagesPage() {
       const otherPartyName = isArtist
         ? convo.match.show.venue.name
         : convo.match.artist.name;
+      const otherPartyImage = isArtist
+        ? convo.match.show.venue.profileImage
+        : convo.match.artist.profileImage;
 
       const lastMessage = convo.messages[0] ?? null;
 
       return {
         id: convo.id,
         otherPartyName,
+        otherPartyImage,
         showTitle: convo.match.show.title,
         lastMessageBody: lastMessage?.body ?? null,
         lastMessageAt: lastMessage?.createdAt?.toISOString() ?? null,

@@ -4,7 +4,19 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { getPusherClient } from "@/lib/pusher/client";
 import { MessageInput } from "@/components/messages/message-input";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
+
+function getInitials(name: string): string {
+  if (!name.trim()) return "?";
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
 
 export interface ChatMessage {
   id: string;
@@ -22,6 +34,7 @@ interface ChatProps {
   currentUserId: string;
   currentUserEmail: string;
   otherPartyName: string;
+  otherPartyImage?: string | null;
   showTitle: string | null;
   artistName: string;
   venueName: string;
@@ -61,6 +74,7 @@ export function Chat({
   currentUserId,
   currentUserEmail,
   otherPartyName,
+  otherPartyImage,
   showTitle,
   artistName,
   venueName,
@@ -162,6 +176,12 @@ export function Chat({
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
+          <Avatar className="h-8 w-8 shrink-0">
+            {otherPartyImage && <AvatarImage src={otherPartyImage} alt="" />}
+            <AvatarFallback className="text-xs">
+              {getInitials(otherPartyName)}
+            </AvatarFallback>
+          </Avatar>
           <div className="min-w-0">
             <h2 className="font-semibold text-sm truncate">{otherPartyName}</h2>
             <p className="text-xs text-muted-foreground truncate">

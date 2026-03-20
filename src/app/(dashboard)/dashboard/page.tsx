@@ -58,6 +58,7 @@ async function VenueDashboardView({ userId }: { userId: string }) {
         artist: {
           select: {
             name: true,
+            profileImage: true,
             artistType: true,
             drawEstimate: true,
             sampleUrls: true,
@@ -85,10 +86,14 @@ async function VenueDashboardView({ userId }: { userId: string }) {
       include: {
         match: {
           include: {
-            artist: { select: { name: true, userId: true } },
+            artist: {
+              select: { name: true, userId: true, profileImage: true },
+            },
             show: {
               include: {
-                venue: { select: { name: true, userId: true } },
+                venue: {
+                  select: { name: true, userId: true, profileImage: true },
+                },
               },
             },
           },
@@ -120,6 +125,7 @@ async function VenueDashboardView({ userId }: { userId: string }) {
     status: m.status,
     score: m.score,
     genres: m.artist.genres,
+    profileImage: m.artist.profileImage,
     artistName: m.artist.name,
     artistType: m.artist.artistType,
     drawEstimate: m.artist.drawEstimate,
@@ -152,12 +158,16 @@ async function VenueDashboardView({ userId }: { userId: string }) {
     const otherPartyName = isArtist
       ? convo.match.show.venue.name
       : convo.match.artist.name;
+    const otherPartyImage = isArtist
+      ? convo.match.show.venue.profileImage
+      : convo.match.artist.profileImage;
 
     const lastMessage = convo.messages[0] ?? null;
 
     return {
       id: convo.id,
       otherPartyName,
+      otherPartyImage,
       showTitle: convo.match.show.title,
       lastMessageBody: lastMessage?.body ?? null,
       lastMessageAt: lastMessage?.createdAt?.toISOString() ?? null,

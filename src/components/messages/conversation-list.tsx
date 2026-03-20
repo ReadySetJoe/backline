@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export interface ConversationSummary {
   id: string;
   otherPartyName: string;
+  otherPartyImage?: string | null;
   showTitle: string | null;
   lastMessageBody: string | null;
   lastMessageAt: string | null;
@@ -70,6 +71,9 @@ export function ConversationList({ conversations }: ConversationListProps) {
           <Card className="transition-shadow hover:shadow-md cursor-pointer">
             <CardContent className="flex items-center gap-3 py-3 px-4">
               <Avatar>
+                {convo.otherPartyImage && (
+                  <AvatarImage src={convo.otherPartyImage} alt="" />
+                )}
                 <AvatarFallback>
                   {getInitials(convo.otherPartyName)}
                 </AvatarFallback>

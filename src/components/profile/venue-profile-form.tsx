@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { updateVenueProfile } from "@/actions/profile";
+import { ImageUpload } from "@/components/profile/image-upload";
 
 interface Genre {
   id: string;
@@ -26,6 +27,8 @@ interface Genre {
 interface VenueProfileData {
   name: string;
   bio: string;
+  profileImage: string;
+  bannerImage: string;
   address: string;
   city: string;
   latitude: number | null;
@@ -53,6 +56,8 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
   // Form state — initialized from existing profile
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio);
+  const [profileImage, setProfileImage] = useState(profile.profileImage);
+  const [bannerImage, setBannerImage] = useState(profile.bannerImage);
   const [address, setAddress] = useState(profile.address);
   const [city, setCity] = useState(profile.city);
   const [latitude, setLatitude] = useState<number | null>(profile.latitude);
@@ -85,6 +90,8 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
       const result = await updateVenueProfile({
         name: name.trim(),
         bio: bio.trim() || undefined,
+        profileImage: profileImage || "",
+        bannerImage: bannerImage || "",
         address: address.trim(),
         city: city.trim(),
         latitude,
@@ -138,6 +145,35 @@ export function VenueProfileForm({ profile, genres }: VenueProfileFormProps) {
             Profile updated successfully.
           </div>
         )}
+
+        {/* Images */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Images
+          </h3>
+
+          <div className="space-y-2">
+            <Label>Profile Photo</Label>
+            <ImageUpload
+              value={profileImage}
+              onChange={setProfileImage}
+              endpoint="profileImage"
+              variant="avatar"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Banner Image</Label>
+            <ImageUpload
+              value={bannerImage}
+              onChange={setBannerImage}
+              endpoint="bannerImage"
+              variant="banner"
+            />
+          </div>
+        </div>
+
+        <Separator />
 
         {/* Basics */}
         <div className="space-y-4">

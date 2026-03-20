@@ -30,13 +30,15 @@ export async function updateArtistProfile(input: ArtistProfileInput) {
     };
   }
 
-  const { genreIds, ...data } = parsed.data;
+  const { genreIds, profileImage, bannerImage, ...data } = parsed.data;
 
   try {
     await db.artistProfile.update({
       where: { userId: session.user.id },
       data: {
         ...data,
+        profileImage: profileImage || null,
+        bannerImage: bannerImage || null,
         genres: { set: genreIds.map((id) => ({ id })) },
       },
     });
@@ -70,13 +72,15 @@ export async function updateVenueProfile(input: VenueProfileInput) {
     };
   }
 
-  const { genreIds, ...data } = parsed.data;
+  const { genreIds, profileImage, bannerImage, ...data } = parsed.data;
 
   try {
     await db.venueProfile.update({
       where: { userId: session.user.id },
       data: {
         ...data,
+        profileImage: profileImage || null,
+        bannerImage: bannerImage || null,
         genres: { set: genreIds.map((id) => ({ id })) },
       },
     });

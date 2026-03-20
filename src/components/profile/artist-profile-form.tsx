@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { updateArtistProfile } from "@/actions/profile";
+import { ImageUpload } from "@/components/profile/image-upload";
 
 interface Genre {
   id: string;
@@ -26,6 +27,8 @@ interface Genre {
 interface ArtistProfileData {
   name: string;
   bio: string;
+  profileImage: string;
+  bannerImage: string;
   location: string;
   latitude: number | null;
   longitude: number | null;
@@ -56,6 +59,8 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
   // Form state — initialized from existing profile
   const [name, setName] = useState(profile.name);
   const [bio, setBio] = useState(profile.bio);
+  const [profileImage, setProfileImage] = useState(profile.profileImage);
+  const [bannerImage, setBannerImage] = useState(profile.bannerImage);
   const [artistType, setArtistType] = useState(profile.artistType);
   const [memberCount, setMemberCount] = useState(String(profile.memberCount));
   const [selectedGenreIds, setSelectedGenreIds] = useState<string[]>(
@@ -98,6 +103,8 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
       const result = await updateArtistProfile({
         name: name.trim(),
         bio: bio.trim() || undefined,
+        profileImage: profileImage || "",
+        bannerImage: bannerImage || "",
         artistType: artistType as "SOLO" | "DUO" | "FULL_BAND",
         memberCount: parseInt(memberCount),
         genreIds: selectedGenreIds,
@@ -154,6 +161,35 @@ export function ArtistProfileForm({ profile, genres }: ArtistProfileFormProps) {
             Profile updated successfully.
           </div>
         )}
+
+        {/* Images */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+            Images
+          </h3>
+
+          <div className="space-y-2">
+            <Label>Profile Photo</Label>
+            <ImageUpload
+              value={profileImage}
+              onChange={setProfileImage}
+              endpoint="profileImage"
+              variant="avatar"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Banner Image</Label>
+            <ImageUpload
+              value={bannerImage}
+              onChange={setBannerImage}
+              endpoint="bannerImage"
+              variant="banner"
+            />
+          </div>
+        </div>
+
+        <Separator />
 
         {/* Basics */}
         <div className="space-y-4">

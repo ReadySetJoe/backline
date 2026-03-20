@@ -20,7 +20,7 @@ NextAuth Google Provider with custom account linking in the `signIn` callback. C
 
 ### 1. Schema Changes
 
-Make `User.passwordHash` optional (`String?`). Google-only users won't have a password hash. Existing users are unaffected.
+Make `User.passwordHash` optional (`String?`) and `User.role` optional (`Role?`). Google-only users won't have a password hash, and new Google users won't have a role until they complete onboarding. Existing users are unaffected.
 
 ```prisma
 model User {
@@ -32,7 +32,7 @@ model User {
 }
 ```
 
-`role` also becomes optional (`Role?`) so new Google users can exist without a role until they complete onboarding.
+Making both fields optional is sufficient for the Prisma adapter's `createUser` to succeed — it only sets `email`, `name`, and `image`. No custom adapter needed.
 
 Migration: `npx prisma migrate dev --name make-passwordhash-role-optional`
 
@@ -67,15 +67,19 @@ This is safe because Google guarantees email verification — we are not linking
 
 **`jwt` callback:**
 
-Handle the case where `role` is `null` (new Google user pre-onboarding). Populate `token.role = null` so the session reflects it.
+Handle the case where `role` is `null` (new Google user pre-onboarding). When `token.role` is `null`, re-fetch the user's role from the database on each request. This ensures onboarding role updates are reflected in the session without requiring a re-login. Once a role is set, stop re-fetching (role doesn't change after onboarding).
+
+**`session` callback:**
+
+Update the type cast from `token.role as Role` to `token.role as Role | null` so null roles propagate correctly to the session.
 
 **Credentials `authorize`:**
 
-Add a guard: if the looked-up user has no `passwordHash` (Google-only user), return `null` with an appropriate error. This prevents Google-only users from attempting email/password login.
+Add a guard: if the looked-up user has no `passwordHash` (Google-only user), return `null`. The login form should detect this case and show a helpful message: "This account uses Google Sign-In. Please sign in with Google."
 
 ### 3. New User Redirect (Onboarding)
 
-In protected pages, after the existing `auth()` check:
+**Place the role-null guard in `src/app/(dashboard)/layout.tsx`** rather than in each individual page. This ensures all dashboard pages are protected consistently:
 
 ```typescript
 const session = await auth();
@@ -83,14 +87,20 @@ if (!session?.user) redirect("/login");
 if (!session.user.role) redirect("/onboarding");
 ```
 
-The onboarding page handles role selection and profile creation. For Google users, onboarding must:
+This is checked once at the layout level, before any role-based branching in child pages.
 
-1. Set the `role` on the existing User record (currently it expects the user was created with a role)
-2. Proceed with profile creation as normal
+### 4. Onboarding for Google Users
 
-Both email/password and Google users go through the same onboarding page.
+The current onboarding page branches on `session.user.role` to show either `ArtistOnboarding` or `VenueOnboarding`. Google users arrive with `role: null`, so onboarding needs a new **role selection step**:
 
-### 4. UI Changes
+1. When `session.user.role` is `null`, render a role picker (reuse the role selection UI from `signup-form.tsx`)
+2. On selection, call a server action that sets the `role` on the User record in the database
+3. The `jwt` callback's re-fetch logic (see section 2) picks up the new role on the next request
+4. After role is set, redirect/refresh to show the appropriate profile onboarding form (`ArtistOnboarding` or `VenueOnboarding`)
+
+Both email/password and Google users end up on the same profile creation forms — Google users just have one extra step at the beginning.
+
+### 5. UI Changes
 
 **Both login and signup pages** get a Google sign-in button:
 
@@ -101,13 +111,15 @@ Both email/password and Google users go through the same onboarding page.
 
 On the signup page, the Google button is an alternative to the email/password + role selection form. Google users pick their role during onboarding instead.
 
-### 5. Type Updates
+**Error UX for Google-only users:** When a Google-only user tries to log in with email/password, display a message: "This account uses Google Sign-In. Please sign in with Google." Handle via a custom error parameter on the login page (e.g., `?error=OAuthAccountOnly`).
+
+### 6. Type Updates
 
 **File:** `src/types/auth.ts`
 
 `role` becomes `Role | null` on `Session.user`, `User`, and `JWT` interfaces to handle Google users pre-onboarding.
 
-### 6. Environment Variables
+### 7. Environment Variables
 
 New variables (NextAuth Google provider reads these automatically):
 
@@ -116,9 +128,9 @@ GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
 ```
 
-Update `.env.example` with placeholder entries.
+Update `.env.example` with placeholder entries. Verify `.env` is in `.gitignore` (it should already be).
 
-### 7. Google Cloud Console Setup
+### 8. Google Cloud Console Setup
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select an existing one
@@ -132,22 +144,30 @@ Update `.env.example` with placeholder entries.
 
 ## Files Changed
 
-| File                                  | Change                                                                           |
-| ------------------------------------- | -------------------------------------------------------------------------------- |
-| `prisma/schema.prisma`                | Make `passwordHash` and `role` optional                                          |
-| `src/lib/auth/index.ts`               | Add Google provider, account linking in `signIn` callback, update `jwt` callback |
-| `src/types/auth.ts`                   | `role` becomes `Role \| null`                                                    |
-| `src/components/auth/login-form.tsx`  | Add Google sign-in button + divider                                              |
-| `src/components/auth/signup-form.tsx` | Add Google sign-in button + divider                                              |
-| `src/app/(dashboard)/*/page.tsx`      | Add role-check redirect to onboarding                                            |
-| `src/app/(auth)/onboarding/*/`        | Handle setting role for Google users                                             |
-| `.env.example`                        | Add Google OAuth placeholders                                                    |
+| File                                  | Change                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `prisma/schema.prisma`                | Make `passwordHash` and `role` optional                                                     |
+| `src/lib/auth/index.ts`               | Add Google provider, account linking in `signIn` callback, update `jwt`/`session` callbacks |
+| `src/types/auth.ts`                   | `role` becomes `Role \| null`                                                               |
+| `src/components/auth/login-form.tsx`  | Add Google sign-in button + divider, handle `OAuthAccountOnly` error                        |
+| `src/components/auth/signup-form.tsx` | Add Google sign-in button + divider                                                         |
+| `src/app/(dashboard)/layout.tsx`      | Add role-null redirect to onboarding                                                        |
+| `src/app/(auth)/onboarding/page.tsx`  | Add role selection step for Google users (role is null)                                     |
+| `src/actions/auth.ts`                 | Add `setRole` server action for Google user onboarding                                      |
+| `.env.example`                        | Add Google OAuth placeholders                                                               |
 
 ## Testing
 
 - **Manual:** Full Google OAuth flow (sign in, account linking, new user onboarding)
 - **E2E:** Google button visibility on login/signup pages, new Google user redirect to onboarding (mock provider)
 - **Unit tests:** No changes needed — matching/scoring logic unaffected
+
+## Edge Cases
+
+- **Google-only user tries email/password login:** Show helpful error message directing them to Google sign-in
+- **User with email/password links Google, then tries both methods:** Both work — credentials check `passwordHash`, Google check uses Account record
+- **Google user with no role accesses any dashboard page:** Layout-level guard redirects to onboarding before any role branching occurs
+- **JWT refresh after onboarding:** `jwt` callback re-fetches role from DB when `token.role` is null, so no re-login required
 
 ## Out of Scope
 

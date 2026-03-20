@@ -1,10 +1,13 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {
   return (
     <div className="w-full max-w-md space-y-4 px-4">
-      <LoginForm />
+      <Suspense>
+        <LoginForm />
+      </Suspense>
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link

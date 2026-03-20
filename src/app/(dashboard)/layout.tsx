@@ -15,6 +15,11 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  // Google users who haven't completed onboarding have no role
+  if (!session.user.role) {
+    redirect("/onboarding");
+  }
+
   if (session.user.role === "SUPER_ADMIN") {
     redirect("/admin");
   }
@@ -44,7 +49,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar role={session.user.role} />
+      <Sidebar role={session.user.role!} />
 
       {/* Main content area — offset for desktop sidebar */}
       <div className="md:pl-64">

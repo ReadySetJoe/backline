@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,15 +11,11 @@ import { GoogleIcon } from "@/components/auth/google-icon";
 
 export function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isGooglePending, setIsGooglePending] = useState(false);
-
-  // Check for OAuth-only account error
-  const urlError = searchParams.get("error");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -73,11 +69,9 @@ export function LoginForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {(error || urlError === "OAuthAccountOnly") && (
+          {error && (
             <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {urlError === "OAuthAccountOnly"
-                ? "This account uses Google Sign-In. Please sign in with Google."
-                : error}
+              {error}
             </div>
           )}
 

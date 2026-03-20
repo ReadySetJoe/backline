@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import type { NextAuthConfig } from "next-auth";
 
@@ -76,21 +77,33 @@ const config = {
       }
 
       // Link Google account to existing email/password user
-      await db.account.create({
-        data: {
-          userId: existingUser.id,
-          type: account.type,
-          provider: account.provider,
-          providerAccountId: account.providerAccountId,
-          access_token: account.access_token,
-          refresh_token: account.refresh_token,
-          expires_at: account.expires_at,
-          token_type: account.token_type,
-          scope: account.scope,
-          id_token: account.id_token,
-          session_state: account.session_state as string | null,
-        },
-      });
+      try {
+        await db.account.create({
+          data: {
+            userId: existingUser.id,
+            type: account.type,
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+            access_token: account.access_token,
+            refresh_token: account.refresh_token,
+            expires_at: account.expires_at,
+            token_type: account.token_type,
+            scope: account.scope,
+            id_token: account.id_token,
+            session_state: account.session_state as string | null,
+          },
+        });
+      } catch (error: unknown) {
+        // If adapter already created this account, ignore the duplicate
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002"
+        ) {
+          // Already linked — proceed
+        } else {
+          throw error;
+        }
+      }
 
       // Point NextAuth user to existing user so JWT gets the right id
       user.id = existingUser.id;

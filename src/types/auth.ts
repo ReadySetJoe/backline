@@ -5,18 +5,18 @@ declare module "next-auth" {
     user: {
       id: string;
       email: string;
-      role: Role;
+      role: Role | null;
     };
   }
 
   interface User {
-    role: Role;
+    role: Role | null;
   }
 }
 
 declare module "@auth/core/jwt" {
   interface JWT {
     id: string;
-    role: Role;
+    role: Role | null;
   }
 }

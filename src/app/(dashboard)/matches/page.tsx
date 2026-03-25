@@ -23,7 +23,10 @@ export default async function MatchesPage() {
     }
 
     const dbMatches = await db.match.findMany({
-      where: { artistId: artistProfile.id },
+      where: {
+        artistId: artistProfile.id,
+        show: { date: { gte: new Date() } },
+      },
       include: {
         show: {
           include: {
@@ -69,6 +72,7 @@ export default async function MatchesPage() {
       where: {
         show: {
           venueId: venueProfile.id,
+          date: { gte: new Date() },
         },
       },
       include: {

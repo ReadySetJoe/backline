@@ -33,7 +33,12 @@ const NAV_ITEMS: {
     icon: MessageIcon,
     roles: ["ARTIST", "VENUE"],
   },
-  { href: "/shows", label: "Shows", icon: CalendarIcon, roles: ["VENUE"] },
+  {
+    href: "/shows",
+    label: "Shows",
+    icon: CalendarIcon,
+    roles: ["ARTIST", "VENUE"],
+  },
   {
     href: "/profile",
     label: "Profile",

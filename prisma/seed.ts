@@ -1469,14 +1469,43 @@ async function main() {
     const existing = await prisma.user.findUnique({ where: { email } });
     const images = venueImageSeed(v.name);
     if (existing) {
-      await prisma.venueProfile.update({
+      const venueProfile = await prisma.venueProfile.update({
         where: { userId: existing.id },
         data: {
           bannerImage: images.bannerImage,
           profileImage: images.profileImage,
         },
       });
-      console.log(`  Skipping venue "${v.name}" (already exists)`);
+
+      // Always update show dates to be in the future
+      for (const s of v.shows) {
+        // Try to find existing show by title for this venue
+        const existingShow = await prisma.show.findFirst({
+          where: { venueId: venueProfile.id, title: s.title },
+        });
+        if (existingShow) {
+          await prisma.show.update({
+            where: { id: existingShow.id },
+            data: { date: daysFromNow(s.daysOut) },
+          });
+        } else {
+          await prisma.show.create({
+            data: {
+              venueId: venueProfile.id,
+              title: s.title,
+              date: daysFromNow(s.daysOut),
+              slotsTotal: s.slotsTotal,
+              compensationType: s.compensationType as CompensationType,
+              compensationNote: s.compensationNote,
+              genres: { connect: connectGenres(s.genres) },
+            },
+          });
+        }
+      }
+
+      console.log(
+        `  Updated venue "${v.name}" (${v.shows.length} shows refreshed)`,
+      );
       continue;
     }
 

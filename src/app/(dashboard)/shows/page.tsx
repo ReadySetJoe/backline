@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShowCard } from "@/components/shows/show-card";
+import { ArtistShows } from "@/components/shows/artist-shows";
 
 export default async function ShowsPage() {
   const session = await auth();
@@ -12,10 +13,11 @@ export default async function ShowsPage() {
     redirect("/login");
   }
 
-  if (session.user.role !== "VENUE") {
-    redirect("/dashboard");
+  if (session.user.role === "ARTIST") {
+    return <ArtistShowsView userId={session.user.id} />;
   }
 
+  // VENUE role
   const venueProfile = await db.venueProfile.findUnique({
     where: { userId: session.user.id },
     select: { id: true },
@@ -65,6 +67,92 @@ export default async function ShowsPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+async function ArtistShowsView({ userId }: { userId: string }) {
+  const artistProfile = await db.artistProfile.findUnique({
+    where: { userId },
+    select: { id: true },
+  });
+
+  if (!artistProfile) {
+    redirect("/onboarding");
+  }
+
+  // Get all mutual matches (booked shows) for this artist
+  const matches = await db.match.findMany({
+    where: {
+      artistId: artistProfile.id,
+      status: "MUTUAL",
+    },
+    include: {
+      show: {
+        include: {
+          venue: {
+            select: {
+              name: true,
+              profileImage: true,
+              address: true,
+              city: true,
+            },
+          },
+          genres: { select: { id: true, name: true } },
+        },
+      },
+    },
+    orderBy: { show: { date: "asc" } },
+  });
+
+  const now = new Date();
+
+  const upcoming = matches
+    .filter((m) => new Date(m.show.date) >= now)
+    .map((m) => ({
+      matchId: m.id,
+      showId: m.show.id,
+      venueName: m.show.venue.name,
+      venueImage: m.show.venue.profileImage,
+      venueCity: m.show.venue.city,
+      showTitle: m.show.title,
+      showDate: m.show.date.toISOString(),
+      genres: m.show.genres,
+      compensationType: m.show.compensationType,
+      compensationNote: m.show.compensationNote,
+      status: m.show.status,
+    }));
+
+  const past = matches
+    .filter((m) => new Date(m.show.date) < now)
+    .sort(
+      (a, b) =>
+        new Date(b.show.date).getTime() - new Date(a.show.date).getTime(),
+    )
+    .map((m) => ({
+      matchId: m.id,
+      showId: m.show.id,
+      venueName: m.show.venue.name,
+      venueImage: m.show.venue.profileImage,
+      venueCity: m.show.venue.city,
+      showTitle: m.show.title,
+      showDate: m.show.date.toISOString(),
+      genres: m.show.genres,
+      compensationType: m.show.compensationType,
+      compensationNote: m.show.compensationNote,
+      status: m.show.status,
+    }));
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Your Shows</h1>
+        <p className="text-muted-foreground mt-1">
+          Shows you&apos;ve been booked for through matches.
+        </p>
+      </div>
+
+      <ArtistShows upcoming={upcoming} past={past} />
     </div>
   );
 }

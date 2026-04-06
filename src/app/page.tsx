@@ -1,7 +1,7 @@
 import { Hero } from "@/components/landing/hero";
+import { Pricing } from "@/components/landing/pricing";
 import {
   Card,
-  CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
@@ -25,27 +25,6 @@ const features = [
     icon: Music,
     title: "Play",
     description: "Take the stage with confidence and bring your sound to life.",
-  },
-] as const;
-
-const pricingTiers = [
-  {
-    name: "Basic",
-    price: "$0",
-    featured: false,
-    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
-  },
-  {
-    name: "Pro",
-    price: "$10",
-    featured: false,
-    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
-  },
-  {
-    name: "Pro +",
-    price: "$20",
-    featured: true,
-    items: ["List Item", "List Item", "List Item", "List Item", "List Item"],
   },
 ] as const;
 
@@ -82,38 +61,7 @@ export default function Home() {
 
       {/* Pricing */}
       <section className="mx-auto w-full max-w-5xl px-6 pb-24">
-        <div className="grid gap-6 sm:grid-cols-3">
-          {pricingTiers.map(({ name, price, featured, items }) => (
-            <Card
-              key={name}
-              className={
-                featured ? "border-primary bg-card" : "border-border/60 bg-card"
-              }
-            >
-              <CardHeader>
-                <div className="flex items-baseline justify-between">
-                  <CardTitle className="text-xl">{name}</CardTitle>
-                  <p className="text-2xl font-bold">
-                    {price}
-                    <span className="text-sm font-normal text-muted-foreground">
-                      /mo
-                    </span>
-                  </p>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <ul className="space-y-2 text-sm">
-                  {items.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <span className="size-1.5 rounded-full bg-primary" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Pricing />
       </section>
 
       {/* Footer */}

@@ -46,9 +46,14 @@ Marketing-only pricing section for the Backline landing page. Role-specific tier
 
 ## Landing Page UI
 
+### Section Header
+
+- Heading: "Simple, Transparent Pricing"
+- Subheading: "Start free. Upgrade when you're ready."
+
 ### Layout
 
-- Replace existing 3-card placeholder pricing section
+- Replace existing 3-card placeholder pricing section (remove `pricingTiers` const entirely from `page.tsx`)
 - Tabbed section with pill toggle: "For Artists" / "For Venues"
 - Two pricing cards below the toggle (Free + Pro for selected role)
 - Default tab: "For Venues" (primary paying customer)
@@ -57,7 +62,12 @@ Marketing-only pricing section for the Backline landing page. Role-specific tier
 
 - Reuse existing shadcn/ui `Card` components
 - Pro card highlighted with `border-primary` and "Recommended" badge
-- Each card: tier name, price, one-liner description, feature checklist, CTA button
+- Free tier price display: "Free" (not "$0/mo")
+- Card descriptions:
+  - Artist Free: "Everything you need to find your next gig"
+  - Artist Pro: "Stand out and get booked faster"
+  - Venue Free: "Start finding artists for your shows"
+  - Venue Pro: "Fill every slot with the perfect artist"
 - Free CTA: "Get Started" → `/signup`
 - Pro CTA: "Start Free Trial" → `/signup` (placeholder, no trial logic)
 
